@@ -226,6 +226,16 @@ if [ -z "$EFFECTIVE_SESSION_KEY" ]; then
   log "ERROR: No session API key available — cannot configure automation auth"
   exit 1
 fi
+
+# The agent server authenticates on OH_SESSION_API_KEYS_0 and knows nothing about
+# LOCAL_BACKEND_API_KEY, which is this image's name for the same credential. The
+# generate-a-key branch above exports it, but that branch only runs when no key was
+# supplied at all — so an operator who sets LOCAL_BACKEND_API_KEY, the documented
+# variable, left the agent server with an empty key list, which it reads as "no
+# authentication configured" and answers every /api call unauthenticated. The
+# frontend still asked for the key, so the deployment looked locked while /api was
+# open to anyone who skipped the UI. Export it on both paths.
+export OH_SESSION_API_KEYS_0="$EFFECTIVE_SESSION_KEY"
 export OPENHANDS_AUTOMATION_API_KEY="${OPENHANDS_AUTOMATION_API_KEY:-${EFFECTIVE_SESSION_KEY}}"
 export AUTOMATION_LOCAL_API_KEY="${AUTOMATION_LOCAL_API_KEY:-${EFFECTIVE_SESSION_KEY}}"
 export AUTOMATION_AGENT_SERVER_API_KEY="${AUTOMATION_AGENT_SERVER_API_KEY:-${EFFECTIVE_SESSION_KEY}}"
