@@ -58,10 +58,15 @@ services:
       # The single credential for the whole stack — the agent server, the
       # automation backend and the UI all check it. Generate one with
       # `openssl rand -base64 32` and store it as a secret in Coolify.
-      # Deliberately mandatory: left unset the entrypoint generates a random key
-      # inside the volume, and in public mode nobody could log in without
-      # shelling into the container to read it back.
-      - LOCAL_BACKEND_API_KEY=${LOCAL_BACKEND_API_KEY:?set LOCAL_BACKEND_API_KEY in Coolify (openssl rand -base64 32)}
+      #
+      # Not declared mandatory with `:?` even though it effectively is. Compose
+      # interpolates this whole file for `build` as much as for `up`, and
+      # Coolify runs the build against a separate build-time env file that need
+      # not carry runtime secrets — so the guard aborts the build instead of
+      # catching a misconfigured runtime, before any build output exists to
+      # explain why. The entrypoint warns about the missing key instead, at the
+      # point where it actually matters.
+      - LOCAL_BACKEND_API_KEY=${LOCAL_BACKEND_API_KEY:-}
 
       # Externally reachable base URL. It goes into automation callback URLs and
       # is injected into sandboxes, so it has to be the public origin rather than

@@ -201,6 +201,10 @@ export OH_SECRET_KEY
 # Persisted so restarts reuse the same key.
 API_KEY_FILE="${STATE_DIR}/api-key.txt"
 
+# Captured before the fallback below assigns one, so public mode can tell an
+# operator-chosen key from a self-generated one that nobody has seen.
+OPERATOR_SUPPLIED_KEY="${LOCAL_BACKEND_API_KEY:-${OH_SESSION_API_KEYS_0:-}}"
+
 if [ -z "${LOCAL_BACKEND_API_KEY:-}" ] && [ -z "${OH_SESSION_API_KEYS_0:-}" ]; then
   if [ -f "$API_KEY_FILE" ]; then
     LOCAL_BACKEND_API_KEY="$(cat "$API_KEY_FILE")"
@@ -403,6 +407,9 @@ case "$(printf '%s' "${AGENT_CANVAS_AUTH_REQUIRED:-}" | tr '[:upper:]' '[:lower:
   1|true|yes|on)
     AUTH_MODE_ARGS=(--auth-required)
     log "Public mode: session key is not injected — users must enter it in the UI."
+    if [ -z "$OPERATOR_SUPPLIED_KEY" ]; then
+      log "WARNING: no LOCAL_BACKEND_API_KEY was supplied, so the key the entry screen asks for is the generated one in $API_KEY_FILE and nobody has it yet. Read it from there, or set the variable and redeploy."
+    fi
     ;;
 esac
 
