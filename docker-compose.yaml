@@ -79,6 +79,18 @@ services:
       # volume is ever recreated.
       OH_SECRET_KEY: ${OH_SECRET_KEY:-}
 
+      # Optional HTTP basic auth in front of the whole origin — static files,
+      # /api, the websockets and the editor alike. Set both to enable it.
+      #
+      # This is what makes AGENT_CANVAS_AUTH_REQUIRED=false safe on a public
+      # hostname: the key goes back into the HTML so nobody is asked for it, and
+      # the browser-remembered password is what keeps strangers out. Enforced by
+      # the ingress rather than by proxy labels because Coolify derives its
+      # Traefik router names per resource, so a middleware cannot be pinned in
+      # this file.
+      AGENT_CANVAS_BASIC_AUTH_USER: ${AGENT_CANVAS_BASIC_AUTH_USER:-}
+      AGENT_CANVAS_BASIC_AUTH_PASSWORD: ${AGENT_CANVAS_BASIC_AUTH_PASSWORD:-}
+
       # Set to 1 to disable backend telemetry as well as the frontend's.
       VITE_DO_NOT_TRACK: ${VITE_DO_NOT_TRACK:-}
 

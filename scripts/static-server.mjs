@@ -28,6 +28,7 @@
  */
 
 import { createServer } from "node:http";
+import { timingSafeEqual } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 import process from "node:process";
@@ -600,6 +601,51 @@ async function handleStatic(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Basic auth
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Optional HTTP basic auth in front of everything this server answers: static
+ * files, the SPA, and every proxied route including the editor.
+ *
+ * It exists for the deployment that bakes the session key into the HTML (no
+ * --auth-required) while sitting on a public hostname. The browser remembers
+ * one password, so nobody types an API key, and a stranger who finds the
+ * hostname gets a challenge rather than a shell. It is off unless both
+ * variables are set, which keeps every existing invocation unchanged.
+ *
+ * Credentials come from the environment rather than argv: argv is readable
+ * through `ps` for anyone on the host. (--session-api-key predates that
+ * concern and is not worth moving on its own.)
+ */
+function readBasicAuthCredentials(env = process.env) {
+  const user = env.AGENT_CANVAS_BASIC_AUTH_USER ?? "";
+  const password = env.AGENT_CANVAS_BASIC_AUTH_PASSWORD ?? "";
+  if (!user || !password) return null;
+  const encoded = Buffer.from(`${user}:${password}`, "utf-8").toString(
+    "base64",
+  );
+  return Buffer.from(`Basic ${encoded}`, "utf-8");
+}
+
+function hasValidBasicAuth(req, expected) {
+  const received = Buffer.from(req.headers.authorization ?? "", "utf-8");
+  // timingSafeEqual throws unless both sides are the same length; the length
+  // itself leaks nothing an attacker could not already guess.
+  return (
+    received.length === expected.length && timingSafeEqual(received, expected)
+  );
+}
+
+function challengeForBasicAuth(res) {
+  res.writeHead(401, {
+    "WWW-Authenticate": 'Basic realm="Agent Canvas", charset="UTF-8"',
+    "Content-Type": "text/plain; charset=utf-8",
+  });
+  res.end("Unauthorized");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Server
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -619,10 +665,15 @@ export function startStaticServer(config) {
   const rejectPrefixes = config.rejectPrefixes ?? [];
   const noReferrerPrefixes = config.noReferrerPrefixes ?? [];
   const staticMiddleware = createStaticMiddleware(dirAbs);
+  const basicAuth = readBasicAuthCredentials();
 
   const uninstallDiagnostics = proxy.installDiagnostics();
 
   const server = createServer((req, res) => {
+    if (basicAuth && !hasValidBasicAuth(req, basicAuth)) {
+      challengeForBasicAuth(res);
+      return;
+    }
     const url = req.url ?? "/";
     const backend = route(url);
     if (backend) {
@@ -662,6 +713,10 @@ export function startStaticServer(config) {
   });
 
   server.on("upgrade", (req, socket, head) => {
+    if (basicAuth && !hasValidBasicAuth(req, basicAuth)) {
+      socket.destroy();
+      return;
+    }
     const backend = route(req.url ?? "/");
     if (backend) {
       proxy.proxyWebSocket(req, socket, head, backend);
@@ -680,6 +735,7 @@ export function startStaticServer(config) {
       );
       console.log(`  Static dir: ${dirAbs}`);
       console.log(`  Base path: ${basePath}`);
+      if (basicAuth) console.log("  Basic auth: required");
       const sortedRoutes = Object.entries(config.routes).sort(
         ([a], [b]) => b.length - a.length,
       );

@@ -92,10 +92,12 @@ Then add these under the resource's **Environment Variables**:
 | `LOCAL_BACKEND_API_KEY` | the generated key | **Required.** Mark it as a secret. Left unset, the entrypoint generates one into the state volume that nobody has seen, and the entry screen becomes unpassable until you read it back out of the container log. |
 | `AUTOMATION_BASE_URL` | `https://test.corat.ai` | Goes into automation callback URLs and is injected into sandboxes, so it has to be the public origin and not the container-local default. |
 | `OH_SECRET_KEY` | 32 random hex bytes (optional) | Encrypts stored settings and secrets. Auto-generated into the volume on first boot; set it explicitly if you want saved secrets to survive the volume being recreated. |
+| `AGENT_CANVAS_BASIC_AUTH_USER` + `AGENT_CANVAS_BASIC_AUTH_PASSWORD` | a name and a long random password (optional) | Puts HTTP basic auth in front of the whole origin. Required if you set `AGENT_CANVAS_AUTH_REQUIRED=false` — see [Two ways to keep strangers out](#two-ways-to-keep-strangers-out). |
+| `AGENT_CANVAS_AUTH_REQUIRED` | `false` (optional) | Drops the API key entry screen and bakes the key into the page. Only with basic auth in front of it. |
 | `VITE_DO_NOT_TRACK` | `1` (optional) | Disables telemetry in the frontend bundle and both backends. |
 
-`AGENT_CANVAS_AUTH_REQUIRED` defaults to `true` in the compose file and should
-stay that way — see [Public mode](#public-mode).
+`AGENT_CANVAS_AUTH_REQUIRED` defaults to `true` in the compose file. The
+section below is what it costs to change that.
 
 ## 4. Deploy
 
@@ -104,10 +106,11 @@ build` inside the image, which is the slow part: budget roughly ten minutes and
 at least 4 GB of RAM on the build host. If Coolify's build times out, raise the
 timeout in the resource's advanced settings rather than retrying blindly.
 
-Once the container reports healthy, open `https://test.corat.ai/`. You should
-get the **API key entry screen** — paste `LOCAL_BACKEND_API_KEY` and you land
-in Agent Canvas. The bundled editor is at `/vscode`, on the same origin and
-port.
+Once the container reports healthy, open `https://test.corat.ai/`. With the
+compose defaults you get the **API key entry screen** — paste
+`LOCAL_BACKEND_API_KEY` and you land in Agent Canvas; with basic auth
+configured instead you get the browser password prompt and land there directly.
+The bundled editor is at `/vscode`, on the same origin and port.
 
 Verify from a shell:
 
@@ -116,18 +119,40 @@ curl -I https://test.corat.ai/          # 200
 curl -I http://test.corat.ai/           # 301/308 to https
 ```
 
-## Public mode
+## Two ways to keep strangers out
 
-`AGENT_CANVAS_AUTH_REQUIRED=true` makes the static server serve the frontend
-without baking the session key into the HTML, so visitors have to enter it.
-Turning it off — the default, which suits a local-only stack — injects the key
-into the page, meaning anyone who can load `https://test.corat.ai/` gets full
-agent access without authenticating. Do not turn it off on a reachable
-hostname.
+Something has to stand in front of this origin, because loading the page is
+enough to drive an agent that has a shell. There are two supported shapes, and
+the difference is only where the credential is asked for.
 
-The key is checked on every `/api/*` call as the `X-Session-API-Key` header, by
-the agent server and the automation backend alike, so a wrong or missing key
-fails at the backend rather than only in the UI.
+**Public mode** — `AGENT_CANVAS_AUTH_REQUIRED=true`, the compose default. The
+static server serves the frontend without baking the session key into the HTML,
+so every visitor pastes `LOCAL_BACKEND_API_KEY` into the entry screen. The
+browser keeps it in `localStorage`, so it is once per browser, not once per
+visit. Nothing else is needed.
+
+**Basic auth** — `AGENT_CANVAS_AUTH_REQUIRED=false` plus
+`AGENT_CANVAS_BASIC_AUTH_USER` and `AGENT_CANVAS_BASIC_AUTH_PASSWORD`. The key
+goes back into the HTML, so the app never asks for it; instead the ingress
+challenges every request — static files, `/api`, the websockets and the editor
+alike — and the browser replays the saved password on its own. In practice
+visitors type nothing after the first prompt.
+
+The ingress enforces this rather than a proxy middleware because Coolify
+derives its Traefik router names per resource, so a middleware cannot be pinned
+in the compose file.
+
+> [!WARNING]
+> `AGENT_CANVAS_AUTH_REQUIRED=false` **without** the basic auth pair is the one
+> combination to avoid: the key is in the page and nothing guards the page, so
+> anyone who resolves the hostname has a shell on the container. A domain is
+> not a secret — certificate transparency logs publish every name you issue a
+> certificate for.
+
+Either way the session key is checked on every `/api/*` call as the
+`X-Session-API-Key` header, by the agent server and the automation backend
+alike, so a wrong or missing key fails at the backend rather than only in the
+UI.
 
 > [!NOTE]
 > **The bundled editor shares the canvas's browser origin.** OpenVSCode is
@@ -176,4 +201,5 @@ as environment variables in Coolify to try a version without a commit.
 | 502 from the proxy right after a deploy | The container is up but the agent server is still starting. The healthcheck allows 120 s for this; the logs end with `All services started` when it is done. |
 | Container marked unhealthy | The ingress process exited — its log line is `Static server (PID …) exited`. |
 | Live agent output never arrives | Websocket upgrades are not reaching the container. Coolify's proxy handles them by default, so look for a custom proxy configuration or a CDN in front of the domain. |
+| Every request returns 401 with a browser password prompt | Basic auth is on. Check `AGENT_CANVAS_BASIC_AUTH_USER` / `AGENT_CANVAS_BASIC_AUTH_PASSWORD`; the startup log prints `Basic auth: required` when it is active. |
 | Build killed | Out of memory during the Vite build. Give the build host more RAM. |
