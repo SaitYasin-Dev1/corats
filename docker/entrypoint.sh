@@ -32,6 +32,12 @@
 #                          the proxy route.
 #   PUBLIC_MODE_PORT     – If set, starts a second static server on this port
 #                          with --auth-required (no session key injected)
+#   AGENT_CANVAS_AUTH_REQUIRED – When true, the static server on $PORT serves
+#                          the frontend with --auth-required instead of the
+#                          baked session key, so visitors land on the API key
+#                          entry screen and must paste LOCAL_BACKEND_API_KEY.
+#                          Set it on any deployment reachable from outside the
+#                          host — see docs/COOLIFY.md and docs/SELF_HOSTING.md.
 #   OH_SECRET_KEY        – Secret key for settings encryption (auto-generated
 #                          and persisted if not provided)
 #   OPENHANDS_AUTOMATION_API_KEY – Override automation backend auth key
@@ -381,12 +387,31 @@ RUNTIME_SERVICES_INFO="$(node /opt/agent-canvas/runtime-services-info.mjs \
   --automation-url "$AUTOMATION_BASE_URL")"
 
 # EFFECTIVE_SESSION_KEY is set above from LOCAL_BACKEND_API_KEY or the persisted api-key.txt
+#
+# Which of the two credential flags the frontend gets is the difference between
+# a local-only stack and one on a public hostname. The default bakes the key
+# into the served HTML, so loading the page is enough to drive the agent — fine
+# on 127.0.0.1, a full shell handed to anyone who can resolve the name once the
+# port is published. AGENT_CANVAS_AUTH_REQUIRED=true swaps it for
+# --auth-required, which serves the same bundle without the key and leaves the
+# API key entry screen in front of it. Unlike PUBLIC_MODE_PORT below it stays on
+# $PORT, so the editor route is still registered and the deployment keeps to a
+# single port. static-server rejects both flags together (they are mutually
+# exclusive), so exactly one goes into the array.
+AUTH_MODE_ARGS=(--session-api-key "$EFFECTIVE_SESSION_KEY")
+case "$(printf '%s' "${AGENT_CANVAS_AUTH_REQUIRED:-}" | tr '[:upper:]' '[:lower:]')" in
+  1|true|yes|on)
+    AUTH_MODE_ARGS=(--auth-required)
+    log "Public mode: session key is not injected — users must enter it in the UI."
+    ;;
+esac
+
 node /opt/agent-canvas/static-server.mjs \
   --port "$PORT" \
   --host :: \
   --dir /opt/agent-canvas/frontend \
   --base-path "$AGENT_CANVAS_BASE_PATH" \
-  --session-api-key "$EFFECTIVE_SESSION_KEY" \
+  "${AUTH_MODE_ARGS[@]}" \
   --runtime-services-info "$RUNTIME_SERVICES_INFO" \
   --route "/api/automation=http://127.0.0.1:${AUTOMATION_PORT}" \
   --route "/api=http://127.0.0.1:${AGENT_SERVER_PORT}" \

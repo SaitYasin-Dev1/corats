@@ -10,6 +10,10 @@ can reach it from anywhere via a browser.
 > machine that holds production credentials**, and lock it down before exposing
 > it to the public internet.
 
+> [!TIP]
+> Deploying onto a Coolify instance rather than a bare VM? [COOLIFY.md](./COOLIFY.md) covers the container build, the domain and TLS;
+> the threat model described here is unchanged by it.
+
 ## Quickstart
 
 1. **Provision a machine** — a cloud VM or dedicated hardware (Mac Mini, NUC, etc.)

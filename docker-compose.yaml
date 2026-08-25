@@ -1,0 +1,113 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# agent-canvas — Coolify deployment (https://test.corat.ai)
+#
+# Coolify builds this stack with its "Docker Compose" build pack, puts its own
+# proxy (Traefik/Caddy) in front of it, and terminates TLS there. That replaces
+# the nginx + certbot half of docs/SELF_HOSTING.md; everything else in that
+# guide — above all the warning about what the agent can do on the host it runs
+# on — still applies.
+#
+# Setup instructions: docs/COOLIFY.md
+#
+# Local sanity check before pushing (needs a .env with LOCAL_BACKEND_API_KEY):
+#   docker compose up --build
+#   → http://localhost:8000 after adding a `ports: ["8000:8000"]` override
+# ═══════════════════════════════════════════════════════════════════════════════
+
+services:
+  canvas:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        # Version pins live in config/defaults.json — scripts/docker-build.mjs and
+        # .github/workflows/docker.yml read them from there. Coolify runs plain
+        # `docker compose build` and cannot, so the same values are repeated here.
+        # Bump both sides together when defaults.json moves.
+        AGENT_SERVER_IMAGE: ${AGENT_SERVER_IMAGE:-ghcr.io/openhands/agent-server:1.42.1-python}
+        AUTOMATION_VERSION: ${AUTOMATION_VERSION:-1.8.0}
+        # Baked into the JS bundle's asset URLs at build time. "/" serves the app
+        # at the domain root, which is what a dedicated hostname wants; the image
+        # published to ghcr defaults to "/canvas" because Cloud mounts it under a
+        # subpath. Must match AGENT_CANVAS_BASE_PATH below — the bundle asks for
+        # assets at the baked path and the static server only serves the mounted
+        # one, so a mismatch is a blank page, not a redirect.
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/}
+        # Public PostHog client key compiled into the bundle. Empty = the frontend
+        # sends no product analytics.
+        VITE_POSTHOG_API_KEY: ${VITE_POSTHOG_API_KEY:-}
+
+    restart: unless-stopped
+
+    environment:
+      # Coolify magic variable: it fills this in with the domain configured for
+      # this service and routes that domain to container port 8000. Set the value
+      # to https://test.corat.ai in Coolify's environment variables (or type the
+      # domain into the service's Domains field and let Coolify generate it).
+      - SERVICE_FQDN_CANVAS_8000
+
+      # Path the SPA is mounted under at runtime. Keep it equal to VITE_BASE_PATH.
+      - AGENT_CANVAS_BASE_PATH=${AGENT_CANVAS_BASE_PATH:-/}
+
+      # Public mode. Without it the static server bakes the session key into the
+      # served HTML and everyone who loads the page inherits a shell on this
+      # container; with it they get the API key entry screen instead. Do not turn
+      # this off on a public hostname.
+      - AGENT_CANVAS_AUTH_REQUIRED=${AGENT_CANVAS_AUTH_REQUIRED:-true}
+
+      # The single credential for the whole stack — the agent server, the
+      # automation backend and the UI all check it. Generate one with
+      # `openssl rand -base64 32` and store it as a secret in Coolify.
+      # Deliberately mandatory: left unset the entrypoint generates a random key
+      # inside the volume, and in public mode nobody could log in without
+      # shelling into the container to read it back.
+      - LOCAL_BACKEND_API_KEY=${LOCAL_BACKEND_API_KEY:?set LOCAL_BACKEND_API_KEY in Coolify (openssl rand -base64 32)}
+
+      # Externally reachable base URL. It goes into automation callback URLs and
+      # is injected into sandboxes, so it has to be the public origin rather than
+      # the container-local default of http://127.0.0.1:8000.
+      - AUTOMATION_BASE_URL=${AUTOMATION_BASE_URL:-https://test.corat.ai}
+
+      # Encrypts stored settings and secrets. Auto-generated into the state volume
+      # on first boot; set it explicitly to keep saved secrets readable if that
+      # volume is ever recreated.
+      - OH_SECRET_KEY=${OH_SECRET_KEY:-}
+
+      # Set to 1 to disable backend telemetry as well as the frontend's.
+      - VITE_DO_NOT_TRACK=${VITE_DO_NOT_TRACK:-}
+
+    # No `ports:` on purpose — publishing 8000 on the host would put the stack on
+    # the server's public IP next to the proxied domain, outside TLS. Coolify's
+    # proxy reaches the container over the Docker network via this expose.
+    expose:
+      - "8000"
+
+    volumes:
+      # Settings, secrets, the generated keys, conversations and the automation
+      # SQLite DB. Losing this volume logs everyone out of their saved settings
+      # and drops conversation history.
+      - canvas-state:/home/openhands/.openhands
+      # Code the agent reads and edits.
+      - canvas-projects:/projects
+
+    # The ingress process is what has to be up for the deployment to be useful;
+    # the entrypoint deliberately tolerates a backend crash behind it (the proxy
+    # answers 502 for that route). So the check is "is the ingress listening",
+    # which is also why it does not speak HTTP — a 401 from a future auth layer
+    # should not read as unhealthy.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "bash -c 'echo > /dev/tcp/127.0.0.1/8000' 2>/dev/null || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      # The first boot installs nothing but does wait on the agent server and the
+      # automation backend coming up, which takes tens of seconds on a small VM.
+      start_period: 120s
+
+volumes:
+  canvas-state:
+  canvas-projects:
