@@ -67,6 +67,15 @@ Ports 80 and 443 must be open on the host: 80 for the ACME HTTP-01 challenge,
 For a private repository, connect a GitHub App or add a deploy key in Coolify
 first — the build runs on the Coolify host and clones the repo there.
 
+Then open the resource's **Domains** tab and point the `canvas` service at
+`https://test.corat.ai`, port 8000.
+
+Coolify can also take the domain from inside the compose file, through its
+`SERVICE_FQDN_<SERVICE>_<PORT>` magic variable — but that has to be written as
+an `environment` entry with no value, and Coolify rewrites this file before
+handing it to compose in a way that turns valueless entries into numeric keys
+compose refuses to load. Hence the Domains tab.
+
 ## 3. Set the environment variables
 
 Generate the API key once and keep a copy; you paste it into the UI on every
@@ -81,7 +90,6 @@ Then add these under the resource's **Environment Variables**:
 | Variable | Value | Notes |
 | --- | --- | --- |
 | `LOCAL_BACKEND_API_KEY` | the generated key | **Required.** Mark it as a secret. Left unset, the entrypoint generates one into the state volume that nobody has seen, and the entry screen becomes unpassable until you read it back out of the container log. |
-| `SERVICE_FQDN_CANVAS_8000` | `https://test.corat.ai` | Coolify's magic variable: attaches the domain and routes it to container port 8000. If your Coolify version shows a **Domains** field for the `canvas` service instead, put the URL there and skip this row. |
 | `AUTOMATION_BASE_URL` | `https://test.corat.ai` | Goes into automation callback URLs and is injected into sandboxes, so it has to be the public origin and not the container-local default. |
 | `OH_SECRET_KEY` | 32 random hex bytes (optional) | Encrypts stored settings and secrets. Auto-generated into the volume on first boot; set it explicitly if you want saved secrets to survive the volume being recreated. |
 | `VITE_DO_NOT_TRACK` | `1` (optional) | Disables telemetry in the frontend bundle and both backends. |
@@ -162,6 +170,7 @@ as environment variables in Coolify to try a version without a commit.
 | Symptom | Cause |
 | --- | --- |
 | Blank page, 404s on `/assets/*` | `VITE_BASE_PATH` and `AGENT_CANVAS_BASE_PATH` disagree. The first is baked in at build time, so changing the env var alone is not enough — rebuild. |
+| Build fails with `non-string key in services.canvas.environment: 0` | The `environment:` block is in `- KEY=value` list form, or an entry has no value at all. Coolify rewrites the compose file and re-emits those entries under numeric keys, which compose rejects. Use the mapping form and give every entry a value. |
 | Build fails with exit 1 before any build output | A compose interpolation error, not a build error. Coolify resolves every `${...}` in the file for `docker compose build` as well, against `/artifacts/build-time.env` — which need not carry runtime secrets. So a `${VAR:?...}` guard on a runtime-only value aborts the build with nothing but the command echoed. Keep runtime secrets as plain `${VAR:-}`. |
 | The entry screen rejects the key | The container did not get the value you think it did. `docker exec <container> printenv LOCAL_BACKEND_API_KEY` shows what it actually received; a redeploy is needed after changing it. |
 | 502 from the proxy right after a deploy | The container is up but the agent server is still starting. The healthcheck allows 120 s for this; the logs end with `All services started` when it is done. |

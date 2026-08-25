@@ -10,8 +10,8 @@
 # Setup instructions: docs/COOLIFY.md
 #
 # Local sanity check before pushing (needs a .env with LOCAL_BACKEND_API_KEY):
-#   docker compose up --build
-#   → http://localhost:8000 after adding a `ports: ["8000:8000"]` override
+#   docker compose build
+#   docker compose run --rm --service-ports canvas
 # ═══════════════════════════════════════════════════════════════════════════════
 
 services:
@@ -39,47 +39,48 @@ services:
 
     restart: unless-stopped
 
+    # Mapping form rather than the `- KEY=value` list form, and every entry
+    # carries a value. Coolify rewrites this file before handing it to compose,
+    # and a list entry without an `=` survives that round trip as a numeric key,
+    # which compose then rejects outright:
+    #   Error: non-string key in services.canvas.environment: 0
+    # That is also why the domain is not wired up here through Coolify's
+    # SERVICE_FQDN_<SERVICE>_<PORT> magic variable, which is spelled exactly that
+    # way — set it in the resource's Domains tab instead (see docs/COOLIFY.md).
     environment:
-      # Coolify magic variable: it fills this in with the domain configured for
-      # this service and routes that domain to container port 8000. Set the value
-      # to https://test.corat.ai in Coolify's environment variables (or type the
-      # domain into the service's Domains field and let Coolify generate it).
-      - SERVICE_FQDN_CANVAS_8000
-
       # Path the SPA is mounted under at runtime. Keep it equal to VITE_BASE_PATH.
-      - AGENT_CANVAS_BASE_PATH=${AGENT_CANVAS_BASE_PATH:-/}
+      AGENT_CANVAS_BASE_PATH: ${AGENT_CANVAS_BASE_PATH:-/}
 
       # Public mode. Without it the static server bakes the session key into the
       # served HTML and everyone who loads the page inherits a shell on this
       # container; with it they get the API key entry screen instead. Do not turn
       # this off on a public hostname.
-      - AGENT_CANVAS_AUTH_REQUIRED=${AGENT_CANVAS_AUTH_REQUIRED:-true}
+      AGENT_CANVAS_AUTH_REQUIRED: ${AGENT_CANVAS_AUTH_REQUIRED:-true}
 
       # The single credential for the whole stack — the agent server, the
       # automation backend and the UI all check it. Generate one with
       # `openssl rand -base64 32` and store it as a secret in Coolify.
       #
       # Not declared mandatory with `:?` even though it effectively is. Compose
-      # interpolates this whole file for `build` as much as for `up`, and
-      # Coolify runs the build against a separate build-time env file that need
-      # not carry runtime secrets — so the guard aborts the build instead of
-      # catching a misconfigured runtime, before any build output exists to
-      # explain why. The entrypoint warns about the missing key instead, at the
-      # point where it actually matters.
-      - LOCAL_BACKEND_API_KEY=${LOCAL_BACKEND_API_KEY:-}
+      # interpolates this whole file for `build` as much as for `up`, and Coolify
+      # runs the build against a separate build-time env file that need not carry
+      # runtime secrets — so the guard would abort the build instead of catching a
+      # misconfigured runtime. The entrypoint warns about the missing key instead,
+      # at the point where it actually matters.
+      LOCAL_BACKEND_API_KEY: ${LOCAL_BACKEND_API_KEY:-}
 
       # Externally reachable base URL. It goes into automation callback URLs and
       # is injected into sandboxes, so it has to be the public origin rather than
       # the container-local default of http://127.0.0.1:8000.
-      - AUTOMATION_BASE_URL=${AUTOMATION_BASE_URL:-https://test.corat.ai}
+      AUTOMATION_BASE_URL: ${AUTOMATION_BASE_URL:-https://test.corat.ai}
 
       # Encrypts stored settings and secrets. Auto-generated into the state volume
       # on first boot; set it explicitly to keep saved secrets readable if that
       # volume is ever recreated.
-      - OH_SECRET_KEY=${OH_SECRET_KEY:-}
+      OH_SECRET_KEY: ${OH_SECRET_KEY:-}
 
       # Set to 1 to disable backend telemetry as well as the frontend's.
-      - VITE_DO_NOT_TRACK=${VITE_DO_NOT_TRACK:-}
+      VITE_DO_NOT_TRACK: ${VITE_DO_NOT_TRACK:-}
 
     # No `ports:` on purpose — publishing 8000 on the host would put the stack on
     # the server's public IP next to the proxied domain, outside TLS. Coolify's
