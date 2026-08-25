@@ -222,7 +222,7 @@ export const links: LinksFunction = () => [
 ];
 
 export const meta: MetaFunction = () => [
-  { title: "OpenHands" },
+  { title: "Corat.ai" },
   { name: "description", content: "Let's Start Building!" },
 ];
 
