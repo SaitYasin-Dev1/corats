@@ -351,6 +351,15 @@ function makeConfigInjectionScript(
         `}` +
         `}catch(e){}`,
     );
+    // A --session-api-key means this instance is already fully configured
+    // by whatever's embedding it (see OnboardingHost / ONBOARDING_COMPLETED_
+    // STORAGE_KEY in use-onboarding-completion.ts) — the welcome wizard's
+    // manual host/API-key setup would be redundant, and re-asks for a key
+    // this page's viewer never sees or manages. Set unconditionally
+    // (not only when unset) so a stale "not yet onboarded" localStorage
+    // state from an earlier, differently-configured visit to this exact
+    // origin can't resurface the wizard.
+    parts.push(`try{localStorage.setItem('openhands-onboarded','1');}catch(e){}`);
   }
 
   if (authRequired) {
