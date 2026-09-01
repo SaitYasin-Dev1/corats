@@ -88,6 +88,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
     noReferrerPrefixes: [],
     sessionApiKey: null,
     authRequired: false,
+    hostedMode: false,
     runtimeServicesInfo: null,
     lockToCloud: null,
     basePath: "/",
@@ -149,6 +150,9 @@ export function parseArgs(argv = process.argv.slice(2)) {
 
       case "--auth-required":
         config.authRequired = true;
+        break;
+      case "--hosted-mode":
+        config.hostedMode = true;
         break;
       case "--reject-prefix": {
         const prefix = argv[++i];
@@ -236,6 +240,11 @@ OPTIONS:
   --auth-required              Inject authRequired flag into index.html so the
                                pre-built frontend shows the API key entry screen
                                (public mode) without VITE_AUTH_REQUIRED baked in.
+  --hosted-mode                Inject hostedMode flag into index.html for
+                               multi-tenant SaaS deployments behind a tenant
+                               gateway: hides backend-management UI and the
+                               local telemetry consent modal, and shows the
+                               gateway-backed profile tile instead.
   --runtime-services-info <json>
                                Inject a JSON description of the local runtime
                                services into index.html so the pre-built
@@ -330,6 +339,7 @@ function makeConfigInjectionScript(
   lockToCloud,
   basePath,
   vscodeBasePath,
+  hostedMode,
 ) {
   const parts = [];
 
@@ -364,6 +374,16 @@ function makeConfigInjectionScript(
 
   if (authRequired) {
     parts.push(`window.__AGENT_CANVAS_AUTH_REQUIRED__=true;`);
+  }
+
+  if (hostedMode) {
+    // Multi-tenant SaaS deployments (the corat-control-plane gateway) —
+    // read by isHostedMode() in agent-server-config.ts. Hides
+    // backend-management UI (a hosted user has exactly one backend, their
+    // own sandbox, chosen by the gateway from their session) and the
+    // local-backend telemetry consent modal, and shows the profile tile
+    // fed by the same-origin control-plane /api/me.
+    parts.push(`window.__AGENT_CANVAS_HOSTED_MODE__=true;`);
   }
 
   if (runtimeServicesInfo) {
@@ -414,6 +434,7 @@ async function serveInjectedIndexHtml(
     lockToCloud,
     basePath,
     vscodeBasePath,
+    hostedMode,
   } = {},
 ) {
   let content;
@@ -430,6 +451,7 @@ async function serveInjectedIndexHtml(
     lockToCloud,
     basePath,
     vscodeBasePath,
+    hostedMode,
   );
   // Inject right before </head> so the key is available before any app code runs.
   // replace() targets the first (and only) </head> in well-formed HTML.
@@ -476,6 +498,7 @@ function needsRuntimeInjection(injectionOpts) {
   return Boolean(
     injectionOpts.sessionApiKey ||
     injectionOpts.authRequired ||
+    injectionOpts.hostedMode ||
     injectionOpts.runtimeServicesInfo ||
     injectionOpts.lockToCloud ||
     injectionOpts.vscodeBasePath ||
@@ -665,6 +688,7 @@ export function startStaticServer(config) {
   const injectionOpts = {
     sessionApiKey: config.sessionApiKey || null,
     authRequired: config.authRequired || false,
+    hostedMode: config.hostedMode || false,
     runtimeServicesInfo: config.runtimeServicesInfo || null,
     lockToCloud: config.lockToCloud || null,
     basePath: normalizeBasePath(config.basePath),

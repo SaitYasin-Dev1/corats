@@ -262,6 +262,27 @@ export function getAgentServerHeaders(): Record<string, string> {
   return sessionApiKey ? { "X-Session-API-Key": sessionApiKey } : {};
 }
 
+/**
+ * Whether this frontend is served by a multi-tenant SaaS deployment behind a
+ * tenant auth gateway (corat-control-plane). Injected by
+ * `scripts/static-server.mjs --hosted-mode` (see docker/entrypoint.sh's
+ * AGENT_CANVAS_HOSTED_MODE), or baked via VITE_HOSTED_MODE for dev.
+ *
+ * In hosted mode the user has exactly one backend — their own sandbox,
+ * resolved from their session by the gateway — so every piece of
+ * backend-management UI (selector, add/manage modals, per-backend telemetry
+ * consent) is meaningless noise and is hidden; the sidebar shows the
+ * gateway-backed profile tile instead.
+ */
+export function isHostedMode(): boolean {
+  return (
+    import.meta.env.VITE_HOSTED_MODE === "true" ||
+    (typeof window !== "undefined" &&
+      (window as unknown as Record<string, unknown>)
+        .__AGENT_CANVAS_HOSTED_MODE__ === true)
+  );
+}
+
 export function isAuthRequired(): boolean {
   return (
     import.meta.env.VITE_AUTH_REQUIRED === "true" ||

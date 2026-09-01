@@ -23,8 +23,10 @@ import { SidebarNavLink } from "./sidebar-nav-link";
 import { I18nKey } from "#/i18n/declaration";
 import { cn } from "#/utils/utils";
 import { StyledTooltip } from "#/components/shared/buttons/styled-tooltip";
+import { isHostedMode } from "#/api/agent-server-config";
 import { BackendSelector } from "#/components/features/backends/backend-selector";
 import { BackendStatusDot } from "#/components/features/backends/backend-status-dot";
+import { HostedProfileTile } from "./hosted-profile-tile";
 import { CommandMenuTrigger } from "#/components/features/command-menu/command-menu-trigger";
 import { AgentCanvasVersionTile } from "#/components/features/settings/agent-canvas-version-tile";
 import { SidebarConversationList } from "./sidebar-conversation-list";
@@ -89,6 +91,10 @@ export function SidebarRailBody({
   const { t } = useTranslation("openhands");
   const backendCloseTimerRef = collapsedBackendCloseTimer;
   const { isPinnedRoute, togglePinnedRoute } = usePinnedHomeRoute();
+  // Hosted (multi-tenant SaaS) mode: the tenant gateway picks the backend
+  // from the session, so backend-management UI is hidden entirely and the
+  // rail's footer shows the user's profile instead.
+  const hosted = isHostedMode();
 
   const buildPinAction = (path: string, testId: string) => {
     const pinned = isPinnedRoute(path);
@@ -272,68 +278,74 @@ export function SidebarRailBody({
               </span>
             </NavigationLink>
           </StyledTooltip>
-          <div
-            className="relative"
-            ref={collapsedBackendPopoverRef}
-            onMouseEnter={() => {
-              if (backendCloseTimerRef.current) {
-                clearTimeout(backendCloseTimerRef.current);
-                backendCloseTimerRef.current = null;
-              }
-              setCollapsedBackendPopoverOpen(true);
-            }}
-            onMouseLeave={() => {
-              backendCloseTimerRef.current = setTimeout(
-                () => setCollapsedBackendPopoverOpen(false),
-                150,
-              );
-            }}
-          >
-            <button
-              type="button"
-              data-testid="collapsed-backend-selector-link"
-              aria-label={t(I18nKey.BACKEND$MANAGE)}
-              aria-expanded={collapsedBackendPopoverOpen}
-              onMouseDown={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
+          {hosted ? (
+            <div className="flex justify-center py-1">
+              <HostedProfileTile collapsed />
+            </div>
+          ) : (
+            <div
+              className="relative"
+              ref={collapsedBackendPopoverRef}
+              onMouseEnter={() => {
+                if (backendCloseTimerRef.current) {
+                  clearTimeout(backendCloseTimerRef.current);
+                  backendCloseTimerRef.current = null;
+                }
+                setCollapsedBackendPopoverOpen(true);
               }}
-              onMouseUp={(event) => event.stopPropagation()}
-              className={cn(
-                sidebarNavRowClassName({ collapsed: true }),
-                "relative",
-              )}
+              onMouseLeave={() => {
+                backendCloseTimerRef.current = setTimeout(
+                  () => setCollapsedBackendPopoverOpen(false),
+                  150,
+                );
+              }}
             >
-              <SidebarCollapsedIconSlot active={collapsedBackendPopoverOpen}>
-                <span className="relative inline-flex size-[18px] shrink-0 items-center justify-center">
-                  <BackendStatusDot
-                    isConnected={activeBackendHealth?.isConnected ?? null}
-                    className="absolute -left-0.5 -top-0.5 z-[1] pointer-events-none"
-                  />
-                  <Server width={ICON_SIZE} height={ICON_SIZE} />
-                </span>
-              </SidebarCollapsedIconSlot>
-              <span className={sidebarNavLabelClassName(true)}>
-                {t(I18nKey.BACKEND$MANAGE)}
-              </span>
-            </button>
-            {collapsedBackendPopoverOpen ? (
-              <div
-                className="absolute bottom-[-4px] left-full pl-2.5 z-40 w-[272px]"
-                onClick={(event) => event.stopPropagation()}
+              <button
+                type="button"
+                data-testid="collapsed-backend-selector-link"
+                aria-label={t(I18nKey.BACKEND$MANAGE)}
+                aria-expanded={collapsedBackendPopoverOpen}
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }}
+                onMouseUp={(event) => event.stopPropagation()}
+                className={cn(
+                  sidebarNavRowClassName({ collapsed: true }),
+                  "relative",
+                )}
               >
-                <BackendSelector
-                  sidebarCollapsed={collapsed}
-                  hideTrigger
-                  defaultOpen
-                  openUpward
-                  onSelectOption={() => setCollapsedBackendPopoverOpen(false)}
-                  onOpenAddBackend={onOpenAddBackend}
-                  onOpenManageBackends={onOpenManageBackends}
-                />
-              </div>
-            ) : null}
-          </div>
+                <SidebarCollapsedIconSlot active={collapsedBackendPopoverOpen}>
+                  <span className="relative inline-flex size-[18px] shrink-0 items-center justify-center">
+                    <BackendStatusDot
+                      isConnected={activeBackendHealth?.isConnected ?? null}
+                      className="absolute -left-0.5 -top-0.5 z-[1] pointer-events-none"
+                    />
+                    <Server width={ICON_SIZE} height={ICON_SIZE} />
+                  </span>
+                </SidebarCollapsedIconSlot>
+                <span className={sidebarNavLabelClassName(true)}>
+                  {t(I18nKey.BACKEND$MANAGE)}
+                </span>
+              </button>
+              {collapsedBackendPopoverOpen ? (
+                <div
+                  className="absolute bottom-[-4px] left-full pl-2.5 z-40 w-[272px]"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <BackendSelector
+                    sidebarCollapsed={collapsed}
+                    hideTrigger
+                    defaultOpen
+                    openUpward
+                    onSelectOption={() => setCollapsedBackendPopoverOpen(false)}
+                    onOpenAddBackend={onOpenAddBackend}
+                    onOpenManageBackends={onOpenManageBackends}
+                  />
+                </div>
+              ) : null}
+            </div>
+          )}
         </nav>
       ) : null}
 
@@ -348,8 +360,16 @@ export function SidebarRailBody({
               "-ml-2.5 w-[calc(100%+0.625rem)] border-t border-[var(--oh-border)] pt-2 px-2.5",
             )}
           >
-            <AgentCanvasVersionTile hideWhenUpToDate />
-            <BackendSelector sidebarCollapsed={collapsed} openUpward />
+            {hosted ? (
+              <HostedProfileTile />
+            ) : (
+              <>
+                {/* Version/update nudges are about the local agent-canvas
+                    install — operator concerns, not a hosted tenant's. */}
+                <AgentCanvasVersionTile hideWhenUpToDate />
+                <BackendSelector sidebarCollapsed={collapsed} openUpward />
+              </>
+            )}
           </div>
         </>
       ) : null}

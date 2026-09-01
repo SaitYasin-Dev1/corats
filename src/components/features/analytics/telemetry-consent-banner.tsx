@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { getLockedCloudHost } from "#/api/agent-server-config";
+import { getLockedCloudHost, isHostedMode } from "#/api/agent-server-config";
 import { useActiveBackend } from "#/contexts/active-backend-context";
 import type { Backend } from "#/api/backend-registry/types";
 import { useSaveSettings } from "#/hooks/mutation/use-save-settings";
@@ -121,6 +121,12 @@ export function TelemetryConsentBanner({
   onChoice,
 }: TelemetryConsentBannerProps) {
   const { backend } = useActiveBackend();
+
+  // Hosted (multi-tenant SaaS) mode: consent is scoped "per local backend",
+  // a concept a hosted tenant neither sees nor controls — the modal's own
+  // wording ("saved for the local backend Local at http://...") makes no
+  // sense there. Telemetry simply stays off (consent is never granted).
+  if (isHostedMode()) return null;
 
   if (getLockedCloudHost() !== null || backend.kind !== "local") return null;
 

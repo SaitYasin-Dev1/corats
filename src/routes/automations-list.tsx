@@ -68,6 +68,7 @@ import { AutomationsFilteredEmptyState } from "#/components/features/automations
 import { MANIFEST_ICON_BY_SLUG } from "#/components/features/manifest/manifest-icons";
 import { ManifestOverviewTiles } from "#/components/features/manifest/manifest-overview-tiles";
 import { ManifestSubpageLayout } from "#/components/features/manifest/manifest-subpage-layout";
+import { HostedWorkflowsSection } from "#/components/features/hosted/hosted-workflows-section";
 import { cn, downloadBlob } from "#/utils/utils";
 
 const PAGE_SIZE = 50;
@@ -399,6 +400,10 @@ export default function AutomationsList() {
           tiles={overviewTiles}
         />
       )}
+
+      {/* Hosted (SaaS) mode: the tenant's ActivePieces workflows, served by
+          the gateway. Renders nothing outside hosted mode. */}
+      <HostedWorkflowsSection />
 
       {/* Search */}
       <div

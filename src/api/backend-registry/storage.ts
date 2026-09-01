@@ -1,3 +1,4 @@
+import { isHostedMode } from "../agent-server-config";
 import {
   SEEDED_DEFAULT_BACKEND_ID,
   makeDefaultLocalBackend,
@@ -113,6 +114,33 @@ export function readStoredBackends(): Backend[] {
         writeStoredActiveBackend({ backendId: lockedCloudBackend.id });
       }
       return [lockedCloudBackend];
+    }
+
+    // Hosted (multi-tenant SaaS) mode: same force-pin pattern as the
+    // locked-cloud branch above. The tenant gateway is the ONLY valid
+    // backend (served origin + the key injected into this page), and the
+    // backend-management UI is hidden, so any other persisted state is
+    // unreachable garbage. It is also actively harmful: this origin's
+    // localStorage can carry entries from before hosted mode existed —
+    // user-added backends, or an active selection whose stored key
+    // predates a sandbox re-provision — and those produced real 401
+    // "Unauthorized" toasts on every load (seen live 2026-09-01) with no
+    // UI left to fix them. Overwrite instead of trusting storage.
+    if (isHostedMode()) {
+      const hostedBackend = makeDefaultLocalBackend();
+      if (hostedBackend) {
+        writeStoredBackends([hostedBackend]);
+        const activeSelection = readStoredActiveBackend();
+        if (
+          activeSelection?.backendId !== hostedBackend.id ||
+          activeSelection?.orgId
+        ) {
+          writeStoredActiveBackend({ backendId: hostedBackend.id });
+        }
+        return [hostedBackend];
+      }
+      // No injected key (page served without the gateway/injection) — fall
+      // through to the normal read path rather than wiping storage.
     }
 
     const raw = window.localStorage.getItem(BACKENDS_STORAGE_KEY);

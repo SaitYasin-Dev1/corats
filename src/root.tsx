@@ -24,8 +24,10 @@ import {
   getLockedCloudAuthMode,
   getLockedCloudHost,
   isAuthRequiredAndMissing,
+  isHostedMode,
   isSameCloudHost,
 } from "#/api/agent-server-config";
+import { WorkspacePreparingScreen } from "#/components/features/hosted/workspace-preparing-screen";
 import {
   authenticateWithMainAppCookie,
   redirectToMainAppLogin,
@@ -132,6 +134,11 @@ function AgentServerBootstrapLoading() {
  */
 function MissingAgentServerScreen() {
   const queryClient = useQueryClient();
+  // Hosted (multi-tenant SaaS) mode: there is no backend for the user to
+  // manage — an unreachable sandbox means the gateway is (re)provisioning
+  // it, and retrying is both the fix and something the preparing screen
+  // does on its own. Never strand a hosted tenant on backend plumbing.
+  const hosted = isHostedMode();
 
   // The modal is the no-backend gate. Selecting or adding a reachable
   // backend must re-run the /server_info probe; otherwise the app stays
@@ -145,6 +152,10 @@ function MissingAgentServerScreen() {
       });
     }
   }, [queryClient]);
+
+  if (hosted) {
+    return <WorkspacePreparingScreen />;
+  }
 
   return (
     <main

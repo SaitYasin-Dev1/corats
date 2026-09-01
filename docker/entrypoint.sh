@@ -423,12 +423,27 @@ case "$(printf '%s' "${AGENT_CANVAS_AUTH_REQUIRED:-}" | tr '[:upper:]' '[:lower:
     ;;
 esac
 
+# AGENT_CANVAS_HOSTED_MODE=true — set by a multi-tenant control plane
+# (corat-control-plane) that fronts this container with its own tenant auth
+# gateway. The frontend then hides backend-management UI (the gateway picks
+# the backend from the session; users must never see backend plumbing) and
+# the local telemetry consent modal, and renders the profile tile driven by
+# the gateway's same-origin /api/me instead.
+HOSTED_MODE_ARGS=()
+case "$(printf '%s' "${AGENT_CANVAS_HOSTED_MODE:-}" | tr '[:upper:]' '[:lower:]')" in
+  1|true|yes|on)
+    HOSTED_MODE_ARGS=(--hosted-mode)
+    log "Hosted mode: backend-management UI hidden; profile tile enabled."
+    ;;
+esac
+
 node /opt/agent-canvas/static-server.mjs \
   --port "$PORT" \
   --host :: \
   --dir /opt/agent-canvas/frontend \
   --base-path "$AGENT_CANVAS_BASE_PATH" \
   "${AUTH_MODE_ARGS[@]}" \
+  "${HOSTED_MODE_ARGS[@]}" \
   --runtime-services-info "$RUNTIME_SERVICES_INFO" \
   --route "/api/automation=http://127.0.0.1:${AUTOMATION_PORT}" \
   --route "/api=http://127.0.0.1:${AGENT_SERVER_PORT}" \
