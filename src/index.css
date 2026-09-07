@@ -12,7 +12,11 @@
   --oh-bg-editor-sidebar: var(--cool-grey-925);
   --oh-bg-editor-active: var(--cool-grey-900);
   --oh-border-editor-sidebar: var(--cool-grey-800);
-  --oh-bg-neutral-muted: color-mix(in srgb, var(--cool-grey-300) 20%, transparent);
+  --oh-bg-neutral-muted: color-mix(
+    in srgb,
+    var(--cool-grey-300) 20%,
+    transparent
+  );
   --bg-dark: var(--oh-bg-dark);
   --bg-light: var(--oh-bg-light);
   --bg-input: var(--oh-bg-input);
@@ -35,19 +39,19 @@
    *   700-800 → borders, input strokes, pressed surfaces
    *   900-975 → raised surfaces, cards, sidebar, base
    * ──────────────────────────────────────────────────────────────────────── */
-  --cool-grey-50:  #1F1D17;
-  --cool-grey-100: #3D3929;
-  --cool-grey-200: #4A4638;
-  --cool-grey-300: #5D594A;
-  --cool-grey-400: #6E6B5C;
+  --cool-grey-50: #1f1d17;
+  --cool-grey-100: #3d3929;
+  --cool-grey-200: #4a4638;
+  --cool-grey-300: #5d594a;
+  --cool-grey-400: #6e6b5c;
   --cool-grey-500: #878378;
-  --cool-grey-600: #9C9889;
-  --cool-grey-700: #D6D3C6;
-  --cool-grey-800: #E3E0D3;
-  --cool-grey-900: #EBE8DC;
-  --cool-grey-925: #F2F0E7;
-  --cool-grey-950: #FAF9F5; /* base — warm ivory app ground */
-  --cool-grey-975: #EFEDE3; /* deep inset: slightly darker than base in a light world */
+  --cool-grey-600: #9c9889;
+  --cool-grey-700: #d6d3c6;
+  --cool-grey-800: #e3e0d3;
+  --cool-grey-900: #ebe8dc;
+  --cool-grey-925: #f2f0e7;
+  --cool-grey-950: #faf9f5; /* base — warm ivory app ground */
+  --cool-grey-975: #efede3; /* deep inset: slightly darker than base in a light world */
   /* ─────────────────────────────────────────────────────────────────────── */
 }
 
@@ -55,8 +59,18 @@ body {
   margin: 0;
   background-color: var(--oh-color-base);
   font-family:
-    "Inter", -apple-system, "SF Pro", BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    "Inter",
+    -apple-system,
+    "SF Pro",
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -82,6 +96,11 @@ code {
 .markdown-body pre code {
   padding: 0;
   background-color: inherit;
+}
+
+/* claude.ai shell: serif selamlama ve asistan metni (Source Serif 4). */
+.font-serif-shell {
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
 .markdown-body {
