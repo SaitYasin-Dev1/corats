@@ -2,7 +2,7 @@ import React from "react";
 import { useClickOutsideElement } from "#/hooks/use-click-outside-element";
 import { NavigationLink } from "#/components/shared/navigation-link";
 import { cn } from "#/utils/utils";
-import { SHELL, SHELL_ICON } from "./shell-tokens";
+import { SHELL } from "./shell-tokens";
 
 type Anchor = "bottom-left" | "top-left" | "bottom-right";
 
@@ -120,5 +120,3 @@ export function ShellMenuItem({
     </li>
   );
 }
-
-export { SHELL_ICON as SHELL_MENU_ICON };

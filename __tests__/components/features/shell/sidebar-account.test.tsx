@@ -108,4 +108,17 @@ describe("SidebarAccount", () => {
       "/login",
     );
   });
+
+  it("closes the member menu on Escape", () => {
+    mockMe.mockReturnValue({
+      status: "member",
+      user: { name: "Sait Yasin", email: "s@corat.ai" },
+      isGuest: false,
+    });
+    render(<SidebarAccount collapsed={false} />);
+    fireEvent.click(screen.getByTestId("shell-account-tile"));
+    expect(screen.getByRole("menu")).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByRole("menu")).toBeNull();
+  });
 });
