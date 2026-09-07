@@ -47,7 +47,7 @@ export function SidebarOnboardingChecklistItemIcon({
   id,
   className,
 }: SidebarOnboardingChecklistItemIconProps) {
-  const iconClassName = cn("shrink-0 text-white", className);
+  const iconClassName = cn("shrink-0 text-content", className);
   const testId = `sidebar-onboarding-checklist-icon-${id}`;
 
   switch (id) {

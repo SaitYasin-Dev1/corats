@@ -54,7 +54,7 @@ function ImportAutomationPicker({ onFile }: { onFile: (file: File) => void }) {
           target="_blank"
           rel="noopener noreferrer"
           data-testid="import-automation-format-docs"
-          className="text-white no-underline transition-colors hover:text-white"
+          className="text-content no-underline transition-colors hover:text-content"
         >
           {t(I18nKey.AUTOMATIONS$IMPORT_FORMAT_DOCS)}
         </a>

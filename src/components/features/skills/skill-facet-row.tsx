@@ -39,8 +39,8 @@ export function SkillFacetRow({
           ? "cursor-default text-tertiary-alt/40"
           : // Same hover pair as the extensions nav links: a raised surface the
             // label brightens against, rather than a light fill it sinks into.
-            "cursor-pointer hover:bg-[var(--oh-surface-raised)] hover:text-white",
-        checked ? "text-white" : "text-tertiary-light",
+            "cursor-pointer hover:bg-[var(--oh-surface-raised)] hover:text-content",
+        checked ? "text-content" : "text-tertiary-light",
       )}
     >
       <span
@@ -48,7 +48,7 @@ export function SkillFacetRow({
         className={cn(
           "flex size-3.5 shrink-0 items-center justify-center rounded-[3px] border",
           checked
-            ? "border-white bg-white text-black"
+            ? "border-[#1F1D17] bg-[#1F1D17] text-white"
             : "border-[var(--oh-border)]",
         )}
       >

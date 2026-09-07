@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Outfit:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
 
 :root {
   --oh-bg-dark: var(--cool-grey-950);
@@ -24,20 +25,29 @@
   --bg-neutral-muted: var(--oh-bg-neutral-muted);
   background-color: var(--oh-color-base) !important;
 
-  /* ── Cool Grey Scale (13 shades + 2 pure anchors: white / black) ──────── */
-  --cool-grey-50:  #F7F9FC;
-  --cool-grey-100: #EEF2F7;
-  --cool-grey-200: #DCE3EE;
-  --cool-grey-300: #C3CDDC;
-  --cool-grey-400: #A3B0C4;
-  --cool-grey-500: #7E8A9E;
-  --cool-grey-600: #626D82;
-  --cool-grey-700: #4B5468;
-  --cool-grey-800: #383F50;
-  --cool-grey-900: #2C313F;
-  --cool-grey-925: #21252F;
-  --cool-grey-950: #0B0E14; /* intentional override: preserves original app-shell depth */
-  --cool-grey-975: #05070A;
+  /* ── Warm Ivory Scale (claude.ai-inspired light world) ────────────────────
+   * Same variable names as the original cool-grey scale, lightness INVERTED:
+   * every semantic token keeps its relationships (text stays highest-contrast,
+   * borders stay mid, surfaces stay near the base) without touching the 600+
+   * component files that consume them.
+   *   50/100  → warm ink (headings / primary text)
+   *   200-600 → secondary → muted text
+   *   700-800 → borders, input strokes, pressed surfaces
+   *   900-975 → raised surfaces, cards, sidebar, base
+   * ──────────────────────────────────────────────────────────────────────── */
+  --cool-grey-50:  #1F1D17;
+  --cool-grey-100: #3D3929;
+  --cool-grey-200: #4A4638;
+  --cool-grey-300: #5D594A;
+  --cool-grey-400: #6E6B5C;
+  --cool-grey-500: #878378;
+  --cool-grey-600: #9C9889;
+  --cool-grey-700: #D6D3C6;
+  --cool-grey-800: #E3E0D3;
+  --cool-grey-900: #EBE8DC;
+  --cool-grey-925: #F2F0E7;
+  --cool-grey-950: #FAF9F5; /* base — warm ivory app ground */
+  --cool-grey-975: #EFEDE3; /* deep inset: slightly darker than base in a light world */
   /* ─────────────────────────────────────────────────────────────────────── */
 }
 
@@ -45,8 +55,8 @@ body {
   margin: 0;
   background-color: var(--oh-color-base);
   font-family:
-    -apple-system, "SF Pro", BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    "Inter", -apple-system, "SF Pro", BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -76,6 +86,10 @@ code {
 
 .markdown-body {
   white-space: pre-wrap; /* Handles line breaks */
+  /* Assistant prose reads in a warm serif, the claude.ai way; code keeps mono. */
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 .markdown-body th {

@@ -10,6 +10,7 @@ import {
   resolveEffectiveAcpModel,
 } from "#/constants/acp-providers";
 import { getAgentServerClientOptions } from "./agent-server-client-options";
+import { CORAT_BUNDLED_SKILLS } from "./corat-skills";
 import {
   getCachedAgentServerInfo,
   isAgentServerToolAvailable,
@@ -785,6 +786,9 @@ function buildAgentContext(
       (skill) =>
         skill.name === invokedCatalogSkill || isSkillEnabled(skill.name),
     ),
+    // Corat built-ins are non-catalog names, so the enablement filter keeps
+    // them on unless the user deny-lists them explicitly.
+    ...CORAT_BUNDLED_SKILLS.filter((skill) => isSkillEnabled(skill.name)),
   ];
 
   return {

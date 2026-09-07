@@ -42,11 +42,11 @@ export function WorkspacePreparingScreen() {
         <div className="relative mb-7">
           <div
             aria-hidden
-            className="absolute -inset-10 rounded-full bg-[radial-gradient(closest-side,rgba(101,106,246,0.30),transparent_72%)] animate-pulse motion-reduce:animate-none"
+            className="absolute -inset-10 rounded-full bg-[radial-gradient(closest-side,rgba(101,106,246,0.18),transparent_72%)] animate-pulse motion-reduce:animate-none"
           />
           <CoratLogo width={132} height={73} className="relative" aria-hidden />
         </div>
-        <h1 className="text-lg font-semibold tracking-tight text-white">
+        <h1 className="text-lg font-semibold tracking-tight text-content-2">
           {t(I18nKey.HOSTED$PREPARING_TITLE)}
         </h1>
         <p className="mt-1.5 max-w-sm text-sm text-[var(--oh-muted)]">

@@ -129,7 +129,7 @@ export function ProfilesBody({
         data-testid="profiles-load-error"
         className={extensionModuleEmptyStateClassName}
       >
-        <p className="text-sm text-red-400">
+        <p className="text-sm text-red-700">
           {t(I18nKey.SETTINGS$PROFILES_LOAD_ERROR)}
         </p>
       </div>

@@ -40,10 +40,10 @@ export function AcpCredentialsSection({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <Typography.Text className="text-sm font-medium text-white">
+        <Typography.Text className="text-sm font-medium text-content">
           {t(I18nKey.SETTINGS$ACP_CREDENTIALS_TITLE)}
         </Typography.Text>
-        <Typography.Text className="text-xs text-[#717888]">
+        <Typography.Text className="text-xs text-[#878378]">
           {t(I18nKey.SETTINGS$ACP_CREDENTIALS_DESCRIPTION)}
         </Typography.Text>
       </div>

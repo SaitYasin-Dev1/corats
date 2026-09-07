@@ -57,20 +57,23 @@ const STATUS_MAP: Record<GitChangeStatus, string | IconType> = {
 
 const beforeMount = (monaco: Monaco) => {
   monaco.editor.defineTheme("custom-diff-theme", {
-    base: "vs-dark",
+    base: "vs",
     inherit: true,
     rules: [
-      { token: "comment", foreground: "6a9955" },
-      { token: "keyword", foreground: "569cd6" },
-      { token: "string", foreground: "ce9178" },
-      { token: "number", foreground: "b5cea8" },
+      { token: "comment", foreground: "6a7a55" },
+      { token: "keyword", foreground: "2b5d9b" },
+      { token: "string", foreground: "a94e2f" },
+      { token: "number", foreground: "1e7a45" },
     ],
     colors: {
-      "diffEditor.insertedTextBackground": "#014b01AA",
-      "diffEditor.removedTextBackground": "#750000AA",
-      "diffEditor.insertedLineBackground": "#003f00AA",
-      "diffEditor.removedLineBackground": "#5a0000AA",
-      "diffEditor.border": "var(--oh-border-subtle)",
+      "editor.background": "#FAF9F5",
+      "editorGutter.background": "#F2F0E7",
+      "editorLineNumber.foreground": "#9C9889",
+      "diffEditor.insertedTextBackground": "#1E8A4A2E",
+      "diffEditor.removedTextBackground": "#BC4B3C2E",
+      "diffEditor.insertedLineBackground": "#1E8A4A1A",
+      "diffEditor.removedLineBackground": "#BC4B3C1A",
+      "diffEditor.border": "#E3E0D3",
       "editorUnnecessaryCode.border": "#00000000",
       "editorUnnecessaryCode.opacity": "rgba(0, 0, 0, 0.467)",
     },

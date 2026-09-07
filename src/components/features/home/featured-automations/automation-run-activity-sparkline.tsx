@@ -35,7 +35,7 @@ function TooltipRow({
   return (
     <div className="flex items-start gap-2 text-xs">
       <span className="w-16 shrink-0 text-[var(--oh-muted)]">{label}</span>
-      <span className="min-w-0 flex-1 break-words text-white">{children}</span>
+      <span className="min-w-0 flex-1 break-words text-content">{children}</span>
     </div>
   );
 }
@@ -70,7 +70,7 @@ function RunActivityBarTooltip({
             barColorClassForStatus(run.status),
           )}
         />
-        <span className="text-sm font-medium text-white">{statusLabel}</span>
+        <span className="text-sm font-medium text-content">{statusLabel}</span>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -117,7 +117,7 @@ function RunActivityBar({
       closeDelay={80}
       delay={200}
       disableAnimation={disableAnimation}
-      className="rounded-xl border border-[var(--oh-border)] bg-base-secondary p-0 text-white shadow-xl"
+      className="rounded-xl border border-[var(--oh-border)] bg-base-secondary p-0 text-content shadow-xl"
     >
       {/* Wider hit target than the 4px bar so cancelled/skipped greys are easy to inspect. */}
       <NavigationLink

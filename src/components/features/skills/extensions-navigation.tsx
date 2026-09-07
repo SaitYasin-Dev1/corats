@@ -75,7 +75,7 @@ export function ExtensionsNavigation() {
       data-testid="extensions-navbar-desktop"
       className="hidden md:flex md:w-[260px] md:shrink-0 md:flex-col md:gap-2 md:sticky md:top-8 md:self-start"
     >
-      <span className="px-2 text-sm font-normal text-white">
+      <span className="px-2 text-sm font-normal text-content">
         {t(I18nKey.NAV$CUSTOMIZE)}
       </span>
       <div className="flex flex-col gap-0.5 pt-0.5">
@@ -98,7 +98,7 @@ export function ExtensionsNavigation() {
             </span>
           );
           const comingSoonBadge = item.comingSoon && (
-            <span className="ml-auto shrink-0 rounded-full border border-white/20 bg-white/5 px-1.5 py-0.5 text-[10px] font-medium text-[var(--oh-text-dim)]">
+            <span className="ml-auto shrink-0 rounded-full border border-[#3D3929]/20 bg-[#3D3929]/5 px-1.5 py-0.5 text-[10px] font-medium text-[var(--oh-text-dim)]">
               {t(I18nKey.NAV$COMING_SOON)}
             </span>
           );

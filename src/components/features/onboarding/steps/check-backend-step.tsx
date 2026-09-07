@@ -58,12 +58,12 @@ function ConnectionBanner({
           "flex items-start gap-3 rounded-xl border border-green-500/40 bg-green-500/10 px-4 py-3",
         )}
       >
-        <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-green-400" />
+        <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-green-700" />
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-green-200">
+          <span className="text-sm font-medium text-green-700">
             {t(I18nKey.ONBOARDING$BACKEND_CONNECTED_TITLE)}
           </span>
-          <span className="text-xs text-green-200/80">
+          <span className="text-xs text-green-700/80">
             {t(I18nKey.ONBOARDING$BACKEND_CONNECTED_BODY)}
           </span>
         </div>
@@ -82,12 +82,12 @@ function ConnectionBanner({
         data-testid="onboarding-backend-disconnected"
         className="flex items-start gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3"
       >
-        <AlertCircle className="mt-0.5 size-5 shrink-0 text-red-400" />
+        <AlertCircle className="mt-0.5 size-5 shrink-0 text-red-700" />
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-red-200">
+          <span className="text-sm font-medium text-red-700">
             {statusLabel}
           </span>
-          <span className="text-xs text-red-200/80">
+          <span className="text-xs text-red-700/80">
             {t(I18nKey.ONBOARDING$BACKEND_DISCONNECTED_BODY)}
           </span>
         </div>
@@ -99,7 +99,7 @@ function ConnectionBanner({
     <div
       role="status"
       data-testid="onboarding-backend-checking"
-      className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+      className="flex items-start gap-3 rounded-xl border border-[#3D3929]/10 bg-[#3D3929]/5 px-4 py-3"
     >
       <Loader2 className="mt-0.5 size-5 shrink-0 animate-spin text-[var(--oh-text-tertiary)]" />
       <span className="text-sm text-[var(--oh-text-tertiary)]">
@@ -239,7 +239,7 @@ export function CheckBackendStep({
       className="flex flex-col gap-6"
     >
       <header className="flex flex-col gap-2">
-        <h2 className="text-2xl font-medium text-white">{t(titleKey)}</h2>
+        <h2 className="text-2xl font-medium text-content-2">{t(titleKey)}</h2>
         {treatAsNoBackend ? null : (
           <p
             data-testid="onboarding-backend-subtitle"

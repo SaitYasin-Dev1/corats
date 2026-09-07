@@ -16,7 +16,7 @@ import { getBackendStatusLabel } from "./backend-status-label";
 import { getLockedCloudHost } from "#/api/agent-server-config";
 
 const ROW_ACTION_BUTTON_CLASS =
-  "inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-muted transition-colors hover:bg-interactive-hover hover:text-white";
+  "inline-flex cursor-pointer items-center justify-center rounded-md p-1 text-muted transition-colors hover:bg-interactive-hover hover:text-content";
 
 interface BackendRowProps {
   backend: Backend;
@@ -54,9 +54,9 @@ export function BackendRow({
     : getBackendStatusLabel(t, backend, health);
   const statusClassName =
     health?.isConnected === true
-      ? "text-green-300"
+      ? "text-green-700"
       : health?.isConnected === false
-        ? "text-red-300"
+        ? "text-red-700"
         : "text-[var(--oh-muted)]";
   const dotStatus = isInvalidApiKey ? false : (health?.isConnected ?? null);
   const canSelect = health?.isConnected === true && !isInvalidApiKey;
@@ -81,7 +81,7 @@ export function BackendRow({
         <BackendStatusDot isConnected={dotStatus} />
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="truncate text-sm text-white">{backend.name}</span>
+            <span className="truncate text-sm text-content">{backend.name}</span>
             <BackendVersion backend={backend} />
           </div>
           {orgLabel ? (
@@ -105,7 +105,7 @@ export function BackendRow({
             <span
               data-testid={`manage-backends-status-detail-${backend.name}`}
               title={statusDetail}
-              className="text-xs text-red-300/80 whitespace-normal break-words"
+              className="text-xs text-red-700/80 whitespace-normal break-words"
             >
               {statusDetail}
             </span>

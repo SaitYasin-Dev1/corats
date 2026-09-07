@@ -47,7 +47,7 @@ export function AgentOptionIcon({ id, muted }: { id: string; muted: boolean }) {
       <AgentBrandIcon
         kind="openhands"
         size={16}
-        className={cn("text-white", muted && "opacity-55")}
+        className={cn("text-content", muted && "opacity-55")}
         data-testid="onboarding-agent-icon-openhands"
       />
     );
@@ -57,7 +57,7 @@ export function AgentOptionIcon({ id, muted }: { id: string; muted: boolean }) {
     <AgentBrandIcon
       kind={icon}
       size={18}
-      className={muted ? "text-[var(--oh-muted)]" : "text-white"}
+      className={muted ? "text-[var(--oh-muted)]" : "text-content"}
       data-testid={`onboarding-agent-icon-${icon}`}
     />
   );
@@ -137,7 +137,7 @@ export function ChooseAgentStep({
       className="flex flex-col gap-6"
     >
       <header className="flex flex-col gap-2">
-        <h2 className="text-2xl font-medium text-white">
+        <h2 className="text-2xl font-medium text-content-2">
           {t(I18nKey.ONBOARDING$AGENT_TITLE)}
         </h2>
         <p className="text-sm text-[var(--oh-muted)]">
@@ -164,14 +164,14 @@ export function ChooseAgentStep({
               className={cn(
                 "flex items-start justify-between gap-4 rounded-xl border px-4 py-3 text-left transition-colors cursor-pointer",
                 isSelected
-                  ? "border-white/45 bg-white/[0.09] shadow-none hover:border-white/45 hover:bg-white/[0.09]"
-                  : "border-white/30 bg-white/5 hover:border-white/40 hover:bg-white/[0.08]",
+                  ? "border-[#3D3929]/45 bg-[#3D3929]/[0.09] shadow-none hover:border-[#3D3929]/45 hover:bg-[#3D3929]/[0.09]"
+                  : "border-[#3D3929]/30 bg-[#3D3929]/5 hover:border-[#3D3929]/40 hover:bg-[#3D3929]/[0.08]",
               )}
             >
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex min-w-0 items-center gap-2">
                   <AgentOptionIcon id={option.id} muted={false} />
-                  <span className="truncate text-base font-normal text-white">
+                  <span className="truncate text-base font-normal text-content">
                     {option.label}
                   </span>
                 </div>
@@ -184,7 +184,7 @@ export function ChooseAgentStep({
                   <Check
                     width={18}
                     height={18}
-                    className="mt-1 shrink-0 text-white"
+                    className="mt-1 shrink-0 text-content"
                     aria-hidden
                   />
                 ) : null}

@@ -21,7 +21,7 @@ export function RiskAlert({
     return (
       <div
         className={cn(
-          "flex items-center gap-3.5 bg-[#4A0709] border border-[#FF0006] text-red-400 rounded-xl px-3.5 h-13 text-sm text-white",
+          "flex items-center gap-3.5 bg-[#BC4B3C]/8 border border-[#BC4B3C]/45 text-[#B0382A] rounded-xl px-3.5 h-13 text-sm",
           className,
         )}
       >

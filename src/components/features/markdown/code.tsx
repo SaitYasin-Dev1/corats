@@ -1,6 +1,6 @@
 import React from "react";
 import { ExtraProps } from "react-markdown";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { CopyableContentWrapper } from "#/components/shared/buttons/copyable-content-wrapper";
 import { cn } from "#/utils/utils";
 import { SyntaxHighlighter } from "./syntax-highlighter";
@@ -48,7 +48,7 @@ export function code({
     <CopyableContentWrapper text={codeString}>
       <SyntaxHighlighter
         className="rounded-lg"
-        style={vscDarkPlus}
+        style={oneLight}
         language={match?.[1]}
         PreTag="div"
       >

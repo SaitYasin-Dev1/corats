@@ -161,6 +161,63 @@ describe("MarkdownRenderer", () => {
     expect(hrefs).toContain("mailto:a@example.com");
   });
 
+  it("keeps workspace-relative img srcs (generated media embeds)", () => {
+    // Agent messages embed generated media with workspace-relative paths
+    // that the chat's ChatImage component later resolves against the
+    // static workspace fileserver. The sanitizer must let the relative
+    // src through (its protocol allow-list only constrains absolute URLs).
+    const md = "![city](generated_media/img_001.png)";
+    const { container } = render(<MarkdownRenderer>{md}</MarkdownRenderer>);
+    const img = container.querySelector("img");
+    expect(img?.getAttribute("src")).toBe("generated_media/img_001.png");
+  });
+
+  it("renders <video> with a relative src and playback attributes", () => {
+    const md =
+      '<video src="generated_media/video_001.mp4" controls loop muted></video>';
+    const { container } = render(<MarkdownRenderer>{md}</MarkdownRenderer>);
+    const video = container.querySelector("video");
+    expect(video).not.toBeNull();
+    expect(video?.getAttribute("src")).toBe("generated_media/video_001.mp4");
+    expect(video?.hasAttribute("controls")).toBe(true);
+  });
+
+  it("renders <video> with nested <source> children", () => {
+    const md = [
+      "<video controls>",
+      '<source src="generated_media/video_001.mp4" type="video/mp4">',
+      "</video>",
+    ].join("\n");
+    const { container } = render(<MarkdownRenderer>{md}</MarkdownRenderer>);
+    const source = container.querySelector("video source");
+    expect(source?.getAttribute("src")).toBe("generated_media/video_001.mp4");
+    expect(source?.getAttribute("type")).toBe("video/mp4");
+  });
+
+  it("blocks javascript: and data: URLs in video src", () => {
+    for (const bad of ["javascript:alert(1)", "data:text/html,x"]) {
+      const { container } = render(
+        <MarkdownRenderer>{`<video src="${bad}" controls></video>`}</MarkdownRenderer>,
+      );
+      const video = container.querySelector("video");
+      expect(video?.getAttribute("src") ?? "").not.toMatch(
+        /^(javascript|data):/i,
+      );
+    }
+  });
+
+  it("strips event handlers from <video>", () => {
+    const md =
+      '<video src="https://example.com/x.mp4" onplay="window.__pwn=1"></video>';
+    const { container } = render(<MarkdownRenderer>{md}</MarkdownRenderer>);
+    const video = container.querySelector("video");
+    if (video) {
+      for (const attr of video.getAttributeNames()) {
+        expect(attr.toLowerCase()).not.toMatch(/^on/);
+      }
+    }
+  });
+
   it("drops <iframe> tags (not in the allow-list)", () => {
     const md = '<iframe src="https://evil.example.com"></iframe>';
     const { container } = render(<MarkdownRenderer>{md}</MarkdownRenderer>);

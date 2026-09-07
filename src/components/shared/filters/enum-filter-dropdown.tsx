@@ -72,7 +72,7 @@ export function EnumFilterDropdown<T extends string>({
           fullWidth && "w-full justify-between",
           defaultOption &&
             value !== defaultOption &&
-            "border-white/60 bg-white/10",
+            "border-[#3D3929]/40 bg-[#3D3929]/10",
         )}
       >
         <span className="whitespace-nowrap">{selectedLabel}</span>

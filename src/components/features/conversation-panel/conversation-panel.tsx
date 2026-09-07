@@ -876,7 +876,7 @@ export function ConversationPanel({
             !showHoverMetadata || openContextMenuId === conversation.id
           }
           disableAnimation={import.meta.env.MODE === "test"}
-          className="max-w-none overflow-visible rounded-xl border border-[var(--oh-border)] bg-base-secondary p-0 text-white shadow-xl"
+          className="max-w-none overflow-visible rounded-xl border border-[var(--oh-border)] bg-base-secondary p-0 text-content shadow-xl"
           content={
             <ConversationCardPreview
               title={conversation.title ?? ""}
@@ -1194,7 +1194,7 @@ export function ConversationPanel({
                 type="button"
                 data-testid="load-more-conversations"
                 onClick={requestLoadMore}
-                className="text-xs text-[var(--oh-muted)] hover:text-white"
+                className="text-xs text-[var(--oh-muted)] hover:text-content"
               >
                 {t(I18nKey.CONVERSATION$LOAD_MORE)}
               </button>

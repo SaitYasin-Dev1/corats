@@ -294,7 +294,7 @@ function DeviceFlowStatusContent({
       >
         <div className="flex items-center justify-center gap-2">
           <LoadingSpinner />
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-content">
             {t(I18nKey.BACKEND$AUTH_AWAITING)}
           </span>
         </div>
@@ -309,7 +309,7 @@ function DeviceFlowStatusContent({
               href={validVerificationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="max-h-16 overflow-auto break-all text-center text-xs text-blue-400 hover:underline"
+              className="max-h-16 overflow-auto break-all text-center text-xs text-blue-700 hover:underline"
             >
               {validVerificationUrl}
             </a>
@@ -334,7 +334,7 @@ function DeviceFlowStatusContent({
       data-testid={`${testIdRoot}-auth-error`}
       role="alert"
     >
-      <p className="text-sm text-red-400">{error}</p>
+      <p className="text-sm text-red-700">{error}</p>
       <BrandButton
         type="button"
         variant="secondary"
@@ -351,7 +351,7 @@ function DeviceFlowStatusContent({
 function LoadingSpinner() {
   return (
     <svg
-      className="animate-spin h-4 w-4 text-white"
+      className="animate-spin h-4 w-4 text-content"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

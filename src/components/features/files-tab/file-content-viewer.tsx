@@ -186,18 +186,17 @@ export function FileContentViewer({ path, viewMode }: FileContentViewerProps) {
     // blends with the surrounding files tab instead of painting a stark
     // white card. `--oh-scroll-fade-from` keeps wide-table edge fades on
     // the same surface (otherwise they default to `--oh-color-base`).
-    // We use `prose-invert` (typography plugin's dark-theme variant) and
-    // then layer arbitrary CSS-variable overrides on top to pin body /
-    // bold / quote text to pure white — the user specifically asked for
-    // every text element (not just headings) to read as white. The custom
+    // We layer arbitrary CSS-variable overrides on top of `prose` to pin
+    // body / bold / quote text to the warm ink (#3D3929) so every text
+    // element reads consistently on the light surface. The custom
     // heading components in `markdown/headings.tsx` already hard-code
-    // `text-white`, so headers stay white through this change.
+    // `text-content-2`, so headers stay ink through this change.
     return (
       <div
         data-testid="file-content-viewer-markdown"
-        className="h-full w-full overflow-auto bg-[var(--oh-surface)] text-white custom-scrollbar-always [--oh-scroll-fade-from:var(--oh-surface)]"
+        className="h-full w-full overflow-auto bg-[var(--oh-surface)] text-content custom-scrollbar-always [--oh-scroll-fade-from:var(--oh-surface)]"
       >
-        <div className="prose prose-sm prose-invert max-w-none p-6 [--tw-prose-body:#fff] [--tw-prose-bold:#fff] [--tw-prose-headings:#fff] [--tw-prose-lead:#fff] [--tw-prose-counters:#fff] [--tw-prose-quotes:#fff] [--tw-prose-quote-borders:var(--oh-border-subtle)] [--tw-prose-bullets:var(--oh-muted)] [--tw-prose-hr:var(--oh-border-subtle)] [--tw-prose-captions:var(--oh-muted)] [--tw-prose-kbd:#fff]">
+        <div className="prose prose-sm max-w-none p-6 [--tw-prose-body:#3D3929] [--tw-prose-bold:#3D3929] [--tw-prose-headings:#3D3929] [--tw-prose-lead:#3D3929] [--tw-prose-counters:#3D3929] [--tw-prose-quotes:#3D3929] [--tw-prose-quote-borders:var(--oh-border-subtle)] [--tw-prose-bullets:var(--oh-muted)] [--tw-prose-hr:var(--oh-border-subtle)] [--tw-prose-captions:var(--oh-muted)] [--tw-prose-kbd:#3D3929]">
           <MarkdownRenderer
             content={text ?? ""}
             includeStandard

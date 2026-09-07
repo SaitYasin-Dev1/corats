@@ -79,7 +79,7 @@ export function HostedProfileTile({
         title={displayName}
         className={cn(
           "flex size-[34px] items-center justify-center rounded-full",
-          "border border-[var(--oh-border)] bg-base-secondary text-sm font-semibold text-white",
+          "border border-[var(--oh-border)] bg-base-secondary text-sm font-semibold text-content",
           className,
         )}
       >
@@ -96,11 +96,11 @@ export function HostedProfileTile({
         className,
       )}
     >
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--oh-surface-raised)] text-sm font-semibold text-white">
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--oh-surface-raised)] text-sm font-semibold text-content">
         {user ? initial : <UserRound width={16} height={16} />}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-semibold leading-5 text-white">
+        <span className="block truncate text-sm font-semibold leading-5 text-content">
           {displayName}
         </span>
         {user?.email && user.email !== displayName ? (
@@ -118,7 +118,7 @@ export function HostedProfileTile({
         title={t(I18nKey.ACCOUNT_SETTINGS$LOGOUT)}
         className={cn(
           "flex size-7 shrink-0 items-center justify-center rounded-md",
-          "text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-white",
+          "text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-content",
           signingOut && "opacity-60",
         )}
       >

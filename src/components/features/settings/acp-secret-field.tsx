@@ -40,7 +40,7 @@ export function AcpSecretField({
       {field.multiline ? (
         <label className="flex flex-col gap-2.5">
           <span className="flex items-center gap-2">
-            <span className="text-sm font-mono text-white">{field.name}</span>
+            <span className="text-sm font-mono text-content">{field.name}</span>
             {showOptionalTag && <OptionalTag />}
           </span>
           <textarea

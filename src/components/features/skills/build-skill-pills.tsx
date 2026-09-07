@@ -139,9 +139,9 @@ export function buildSkillPills(
             pillTestId(testIdPrefix, skill.name, "disable-model-invocation") ??
             `skill-disable-model-invocation-${skill.name}`
           }
-          className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-[rgba(248,113,113,0.35)] bg-[rgba(248,113,113,0.12)] px-2 py-0.5 text-[11px] font-medium leading-4 text-[#fca5a5]"
+          className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-[rgba(188,75,60,0.35)] bg-[rgba(188,75,60,0.10)] px-2 py-0.5 text-[11px] font-medium leading-4 text-[#B0382A]"
         >
-          <span className="size-1.5 rounded-full bg-[#fca5a5]" />
+          <span className="size-1.5 rounded-full bg-[#B0382A]" />
           {translate(I18nKey.SETTINGS$SKILLS_DISABLE_MODEL_INVOCATION)}
         </span>
       ),

@@ -63,13 +63,13 @@
 }
 
 :root {
-  color-scheme: dark;
-  --oh-color-primary: #c9b974;
-  --oh-color-logo: #cfb755;
+  color-scheme: light;
+  --oh-color-primary: #c6613f; /* terracotta — the single accent of the warm world */
+  --oh-color-logo: #c6613f;
   --oh-color-base: var(--cool-grey-950);
   --oh-color-base-secondary: var(--cool-grey-925);
-  --oh-color-danger: #e76a5e;
-  --oh-color-success: #a5e75e;
+  --oh-color-danger: #bc4b3c;
+  --oh-color-success: #2e7d4f;
   --oh-color-basic: var(--cool-grey-400);
   --oh-color-tertiary: var(--cool-grey-800);
   --oh-color-tertiary-light: var(--cool-grey-300);
@@ -81,9 +81,9 @@
   --oh-surface-foreground: var(--cool-grey-100);
   --oh-surface-raised: var(--cool-grey-900);  /* elevated within a panel */
   --oh-surface-deep: var(--cool-grey-975);    /* deep inset, context menus */
-  --oh-overlay: var(--cool-grey-925);
+  --oh-overlay: #ffffff;
   --oh-overlay-foreground: var(--cool-grey-100);
-  --oh-modal-title-foreground: #ffffff;
+  --oh-modal-title-foreground: var(--cool-grey-50);
   --oh-muted: var(--cool-grey-400);
   --oh-text-secondary: var(--cool-grey-300);  /* readable secondary text */
   --oh-text-tertiary: var(--cool-grey-200);   /* tertiary, slightly dimmer */
@@ -97,14 +97,14 @@
   --oh-scrollbar-hover: color-mix(in srgb, var(--cool-grey-400) 50%, transparent);
   --oh-default: var(--cool-grey-800);
   --oh-default-foreground: var(--cool-grey-100);
-  --oh-accent: #c9b974;
-  --oh-accent-foreground: var(--cool-grey-950);
-  --oh-success: #a5e75e;
-  --oh-success-foreground: var(--cool-grey-950);
-  --oh-warning: #c9b974;
-  --oh-warning-foreground: var(--cool-grey-950);
-  --oh-danger: #e76a5e;
-  --oh-danger-foreground: var(--cool-grey-50);
+  --oh-accent: #c6613f;
+  --oh-accent-foreground: #ffffff;
+  --oh-success: #2e7d4f;
+  --oh-success-foreground: #ffffff;
+  --oh-warning: #a16207;
+  --oh-warning-foreground: #ffffff;
+  --oh-danger: #bc4b3c;
+  --oh-danger-foreground: #ffffff;
   --oh-segment: var(--cool-grey-925);
   --oh-segment-foreground: var(--cool-grey-100);
   --oh-border-width: 1px;
@@ -112,15 +112,15 @@
   --oh-border: var(--cool-grey-700);
   --oh-border-input: var(--cool-grey-700);   /* unified with --oh-border; same stroke weight everywhere */
   --oh-border-subtle: var(--cool-grey-800);  /* within-panel separators, list dividers */
-  --oh-separator: rgba(113, 120, 136, 0.5);
-  --oh-focus: #ffffff;
-  --oh-status-success: #1FBD53;
-  --oh-status-error: #FF684E;
+  --oh-separator: rgba(61, 57, 41, 0.16);
+  --oh-focus: #c6613f;
+  --oh-status-success: #1E8A4A;
+  --oh-status-error: #C0392B;
   --oh-link: var(--cool-grey-100);
   --oh-radius: 8px;
   --oh-field-radius: 8px;
   --oh-surface-shadow: none;
-  --oh-overlay-shadow: none;
+  --oh-overlay-shadow: 0 10px 30px -8px rgba(61, 57, 41, 0.18), 0 2px 8px rgba(61, 57, 41, 0.08);
   --oh-field-shadow: none;
   --background: var(--oh-background);
   --foreground: var(--oh-foreground);
@@ -162,6 +162,17 @@
   [role="button"]:not([aria-disabled="true"]) {
     cursor: pointer;
   }
+
+  /* The browser surfaces carry the warm world too. */
+  ::selection {
+    background: rgba(198, 97, 63, 0.22);
+    color: var(--cool-grey-50);
+  }
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: #c6613f;
+  }
 }
 
 /* Skills / MCP / Automations tiles: no border at rest; hover/focus-visible only. */
@@ -179,7 +190,7 @@ button.extension-module-card-interactive {
 }
 
 .extension-module-card-interactive:hover {
-  border-color: rgb(255 255 255 / 0.4);
+  border-color: rgba(61, 57, 41, 0.28);
 }
 
 .extension-module-card-interactive:focus {
@@ -193,7 +204,7 @@ button.extension-module-card-interactive {
 
 .extension-module-card-interactive:focus-visible {
   outline: none;
-  border-color: rgb(255 255 255 / 0.4);
+  border-color: rgba(198, 97, 63, 0.6);
 }
 
 .button-base {
@@ -234,7 +245,8 @@ button.extension-module-card-interactive {
 }
 
 .heading {
-  @apply text-[28px] leading-8 -tracking-[0.02em] font-bold text-content-2;
+  @apply text-[28px] leading-9 -tracking-[0.01em] font-semibold text-content-2;
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
 /* Custom Chat Input */
@@ -341,7 +353,7 @@ button.extension-module-card-interactive {
 /* Drag and drop styles */
 .drag-over {
   backdrop-filter: blur(2px);
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(250, 249, 245, 0.72);
   border-radius: 15px;
   height: 100%;
   left: 0;
@@ -366,15 +378,15 @@ button.extension-module-card-interactive {
 
 .drag-over-ui-content {
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 20px;
-  color: #fff;
+  color: var(--cool-grey-100);
 }
 
 /* File preview styles */
 .file-preview {
-  background: rgba(208, 217, 250, 0.1);
-  border: 1px solid rgba(208, 217, 250, 0.3);
+  background: rgba(61, 57, 41, 0.05);
+  border: 1px solid rgba(61, 57, 41, 0.16);
   border-radius: 8px;
   padding: 8px;
   margin: 4px 0;
@@ -404,7 +416,7 @@ button.extension-module-card-interactive {
 }
 
 .file-preview .remove-file {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(61, 57, 41, 0.08);
   border: none;
   border-radius: 50%;
   width: 16px;
@@ -419,7 +431,7 @@ button.extension-module-card-interactive {
 }
 
 .file-preview .remove-file:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(61, 57, 41, 0.16);
 }
 
 .loader {
@@ -601,7 +613,7 @@ button.extension-module-card-interactive {
   background-clip: text !important;
   animation: shine 2s linear infinite;
   background:
-    radial-gradient(circle at center, rgb(24 24 27 / 85%), transparent) -200%
+    radial-gradient(circle at center, rgb(250 249 245 / 85%), transparent) -200%
       50% / 200% 100% no-repeat,
     var(--cool-grey-50);
 }
@@ -637,11 +649,11 @@ button.extension-module-card-interactive {
   background:
     radial-gradient(
       85.36% 123.38% at 50% 0%,
-      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.16) 0%,
       rgba(0, 0, 0, 0) 100%
     ),
-    #000000;
+    #c6613f;
   box-shadow:
-    0px 4px 6px -4px rgba(0, 0, 0, 0.1),
-    0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    0px 4px 6px -4px rgba(61, 57, 41, 0.12),
+    0px 10px 15px -3px rgba(61, 57, 41, 0.12);
 }

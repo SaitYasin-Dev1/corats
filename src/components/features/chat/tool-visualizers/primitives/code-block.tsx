@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { SyntaxHighlighter } from "../../../markdown/syntax-highlighter";
 import { CopyableContentWrapper } from "#/components/shared/buttons/copyable-content-wrapper";
 import { MAX_CONTENT_LENGTH } from "#/components/conversation-events/chat/event-content-helpers/shared";
@@ -50,7 +50,7 @@ export function CodeBlock({
   const block = (
     <SyntaxHighlighter
       className="rounded-lg text-xs"
-      style={vscDarkPlus}
+      style={oneLight}
       language={language}
       PreTag="div"
       wrapLongLines={wrapLongLines}
@@ -74,7 +74,7 @@ export function CodeBlock({
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="self-start text-xs text-muted transition-colors hover:text-white hover:underline"
+          className="self-start text-xs text-muted transition-colors hover:text-content hover:underline"
         >
           {toggleLabel}
         </button>

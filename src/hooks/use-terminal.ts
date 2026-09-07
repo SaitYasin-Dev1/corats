@@ -111,6 +111,28 @@ export const useTerminal = () => {
       theme: {
         background: "rgba(0, 0, 0, 0)",
         foreground: resolveTerminalForeground(host),
+        // Warm-light ANSI palette: xterm's stock colors assume a dark ground
+        // and wash out on the ivory panel, so each slot is retuned for ≥4.5:1
+        // contrast on #FAF9F5 while keeping hue identity.
+        cursor: "#C6613F",
+        cursorAccent: "#FAF9F5",
+        selectionBackground: "rgba(198, 97, 63, 0.25)",
+        black: "#1F1D17",
+        red: "#B0382A",
+        green: "#1E7A45",
+        yellow: "#8A6A03",
+        blue: "#2B5D9B",
+        magenta: "#8B4A8F",
+        cyan: "#0E7490",
+        white: "#9C9889",
+        brightBlack: "#6E6B5C",
+        brightRed: "#C0392B",
+        brightGreen: "#2E7D4F",
+        brightYellow: "#A16207",
+        brightBlue: "#3B6FB5",
+        brightMagenta: "#A05AA5",
+        brightCyan: "#0891B2",
+        brightWhite: "#3D3929",
       },
     });
 

@@ -95,8 +95,8 @@ function UpdateCommandTabs() {
             className={cn(
               "inline-flex items-center gap-1.5 px-3 pb-2 text-sm font-medium",
               selectedTab === tab
-                ? "border-b border-white text-white"
-                : "text-[var(--oh-muted)] hover:text-white",
+                ? "border-b border-content text-content"
+                : "text-[var(--oh-muted)] hover:text-content",
             )}
           >
             <UpdateCommandTabIcon tab={tab} />
@@ -111,7 +111,7 @@ function UpdateCommandTabs() {
               ? "agent-canvas-update-command-npm"
               : "agent-canvas-update-command-docker"
           }
-          className="min-w-0 flex-1 overflow-visible whitespace-nowrap font-mono text-sm text-white"
+          className="min-w-0 flex-1 overflow-visible whitespace-nowrap font-mono text-sm text-content"
         >
           {command}
         </code>
@@ -125,7 +125,7 @@ function UpdateCommandTabs() {
               : I18nKey.SETTINGS$VERSION_COPY_COMMAND,
           )}
           disabled={copied}
-          className="shrink-0 text-[var(--oh-muted)] hover:text-white disabled:hover:text-[var(--oh-muted)]"
+          className="shrink-0 text-[var(--oh-muted)] hover:text-content disabled:hover:text-[var(--oh-muted)]"
         >
           {copied ? (
             <Check
@@ -179,7 +179,7 @@ function AgentCanvasUpdateModal({
             <span className="text-[var(--oh-text-dim)]">
               {t(I18nKey.SETTINGS$APP_UPDATE_VERSION_LABEL)}
             </span>
-            <span className="text-white">{AGENT_CANVAS_CLIENT_VERSION}</span>
+            <span className="text-content">{AGENT_CANVAS_CLIENT_VERSION}</span>
           </div>
         </div>
 
@@ -208,7 +208,7 @@ function AgentCanvasUpdateModal({
                 {t(I18nKey.SETTINGS$APP_UPDATE_CHECKING)}
               </span>
             ) : updateAvailable ? (
-              <div className="flex items-start gap-2 rounded-lg border border-[#3B82F6]/30 bg-[#1E3A5F] px-3 py-2 text-xs text-[#3B82F6]">
+              <div className="flex items-start gap-2 rounded-lg border border-[#2B5D9B]/30 bg-[#3B82F6]/10 px-3 py-2 text-xs text-[#2B5D9B]">
                 <ArrowUpCircle className="size-4 shrink-0" aria-hidden />
                 <span>
                   {t(I18nKey.SETTINGS$APP_UPDATE_AVAILABLE_MESSAGE, {
@@ -219,7 +219,7 @@ function AgentCanvasUpdateModal({
                     href={AGENT_CANVAS_RELEASE_NOTES_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-white hover:text-[var(--oh-text)]"
+                    className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-content hover:text-[var(--oh-text)]"
                   >
                     {t(I18nKey.SETTINGS$VERSION_RELEASE_NOTES)}
                     <ExternalLink className="size-3.5 shrink-0" aria-hidden />
@@ -236,7 +236,7 @@ function AgentCanvasUpdateModal({
                     href={AGENT_CANVAS_RELEASE_NOTES_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-white hover:text-[var(--oh-text)]"
+                    className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-content hover:text-[var(--oh-text)]"
                   >
                     {t(I18nKey.SETTINGS$VERSION_RELEASE_NOTES)}
                     <ExternalLink className="size-3.5 shrink-0" aria-hidden />
@@ -252,7 +252,7 @@ function AgentCanvasUpdateModal({
 
           {updateAvailable ? (
             <div className="flex w-full flex-col border-t border-[var(--oh-border)] pt-3">
-              <span className="text-sm font-medium text-white">
+              <span className="text-sm font-medium text-content">
                 {t(I18nKey.SETTINGS$APP_UPDATE_HOW_TO_UPDATE)}
               </span>
               <span className="mt-1 mb-4 text-sm text-[var(--oh-text-dim)]">
@@ -312,7 +312,7 @@ export function AgentCanvasUpdateCard({
           className="flex w-full cursor-pointer flex-col gap-1 rounded-md border border-[var(--oh-border)] bg-base-secondary px-3 py-2 text-left hover:bg-[var(--oh-surface-raised)]"
         >
           <span className="flex w-full items-center gap-2">
-            <span className="flex-1 truncate text-sm font-semibold leading-5 text-white">
+            <span className="flex-1 truncate text-sm font-semibold leading-5 text-content">
               {t(I18nKey.SETTINGS$APP_UPDATE_CARD_TITLE)}
             </span>
             {comparison !== null && (
@@ -321,7 +321,7 @@ export function AgentCanvasUpdateCard({
                 className={cn(
                   "inline-flex shrink-0 items-center gap-1 text-[10px] font-medium leading-none",
                   updateAvailable
-                    ? "rounded-full border border-transparent bg-[#1E3A5F] px-1.5 py-0.5 text-[#3B82F6]"
+                    ? "rounded-full border border-transparent bg-[#3B82F6]/10 px-1.5 py-0.5 text-[#2B5D9B]"
                     : "text-success",
                 )}
               >
@@ -341,7 +341,7 @@ export function AgentCanvasUpdateCard({
 
           <span className="flex items-center gap-1.5 text-xs leading-5 text-[var(--oh-muted)]">
             <span>{t(I18nKey.SETTINGS$APP_UPDATE_VERSION_LABEL)}</span>
-            <span className="text-white">{AGENT_CANVAS_CLIENT_VERSION}</span>
+            <span className="text-content">{AGENT_CANVAS_CLIENT_VERSION}</span>
           </span>
         </button>
       </section>

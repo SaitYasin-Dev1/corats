@@ -671,7 +671,7 @@ export function AgentSettingsScreen({
           <Typography.H2 className="mb-2">
             {t(I18nKey.SETTINGS$NAV_AGENT)}
           </Typography.H2>
-          <Typography.Paragraph className="text-sm text-[#A3A3A3]">
+          <Typography.Paragraph className="text-sm text-[#6E6B5C]">
             {t(I18nKey.SETTINGS$AGENT_PAGE_DESCRIPTION)}
           </Typography.Paragraph>
         </div>
@@ -810,7 +810,7 @@ export function AgentSettingsScreen({
             </Typography.Text>
             <textarea
               data-testid="agent-command-input"
-              className="bg-tertiary border border-[#717888] rounded-sm p-2 text-sm font-mono text-white placeholder:text-[#717888] min-h-[60px] resize-y focus:outline-none focus:border-white"
+              className="bg-tertiary border border-[#878378] rounded-sm p-2 text-sm font-mono text-content placeholder:text-[#878378] min-h-[60px] resize-y focus:outline-none focus:border-[#3D3929]"
               value={commandText}
               placeholder={commandPlaceholder}
               onChange={(e) => {
@@ -835,7 +835,7 @@ export function AgentSettingsScreen({
                 setIsDirty(true);
               }}
             />
-            <Typography.Text className="text-xs text-[#717888]">
+            <Typography.Text className="text-xs text-[#878378]">
               {t(I18nKey.SETTINGS$AGENT_COMMAND_HINT)}
             </Typography.Text>
           </div>
@@ -889,7 +889,7 @@ export function AgentSettingsScreen({
                 }}
               />
             )}
-            <Typography.Text className="text-xs text-[#717888]">
+            <Typography.Text className="text-xs text-[#878378]">
               {t(I18nKey.SETTINGS$AGENT_MODEL_HINT)}
             </Typography.Text>
           </div>

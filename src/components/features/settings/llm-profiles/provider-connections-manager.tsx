@@ -48,7 +48,7 @@ export function ProviderConnectionsManager({
           data-testid="provider-connections-load-error"
           className={extensionModuleEmptyStateClassName}
         >
-          <p className="text-sm text-red-400">
+          <p className="text-sm text-red-700">
             {t(I18nKey.SETTINGS$PROVIDER_CONNECTIONS_LOAD_ERROR)}
           </p>
         </div>
@@ -93,7 +93,7 @@ export function ProviderConnectionsManager({
       <div className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
-            <h2 className="text-base font-medium text-white">
+            <h2 className="text-base font-medium text-content">
               {t(I18nKey.SETTINGS$PROVIDER_CONNECTIONS_TITLE)}
             </h2>
             <p className="text-sm text-[var(--oh-muted)]">

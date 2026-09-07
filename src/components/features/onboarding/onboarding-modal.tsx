@@ -313,7 +313,7 @@ export function OnboardingModal({
           data-current-step={currentStep}
           data-preview={isPreview ? "true" : undefined}
           className={cn(
-            "flex flex-col gap-6 overflow-hidden rounded-2xl border border-white/10 bg-base-secondary shadow-2xl",
+            "flex flex-col gap-6 overflow-hidden rounded-2xl border border-[var(--oh-border)] bg-base-secondary shadow-2xl",
             modalWidthClassName("lg"),
             MODAL_MAX_WIDTH_VIEWPORT,
             "max-h-[90vh]",
@@ -388,7 +388,7 @@ export function OnboardingModal({
             type="button"
             data-testid="onboarding-skip"
             onClick={handleSkipOrDismiss}
-            className="rounded-md px-3 py-2 text-sm text-[var(--oh-muted)] transition-colors hover:bg-white/5 hover:text-white cursor-pointer"
+            className="rounded-md px-3 py-2 text-sm text-[var(--oh-muted)] transition-colors hover:bg-[#3D3929]/5 hover:text-content cursor-pointer"
           >
             {t(I18nKey.ONBOARDING$SKIP)}
           </button>

@@ -100,13 +100,13 @@ export function AutomationsDashboardControls({
         className={cn(
           dropdownFilterTriggerClassName,
           "h-9 py-0",
-          activeCount > 0 && "border-white/60 bg-white/10",
+          activeCount > 0 && "border-[#3D3929]/60 bg-[#3D3929]/10",
         )}
       >
         <ListFilter className="h-4 w-4 shrink-0" aria-hidden />
         <span className="whitespace-nowrap">{filtersLabel}</span>
         {activeCount > 0 ? (
-          <span className="rounded-full bg-white px-1.5 text-[11px] font-medium text-black">
+          <span className="rounded-full bg-[#1F1D17] px-1.5 text-[11px] font-medium text-white">
             {activeCount}
           </span>
         ) : null}

@@ -201,7 +201,7 @@ export function ConversationCard({
       onClick={handleTogglePin}
       className={cn(
         "flex shrink-0 cursor-pointer items-center justify-center rounded-md p-1",
-        "text-[var(--oh-muted)] hover:bg-white/10 hover:text-white",
+        "text-[var(--oh-muted)] hover:bg-[#3D3929]/10 hover:text-content",
       )}
     >
       <Pin

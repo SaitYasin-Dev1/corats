@@ -140,7 +140,7 @@ export function SetupAcpSecretsStep({
       className="flex flex-col gap-6"
     >
       <header className="flex flex-col gap-2">
-        <h2 className="text-2xl font-medium text-white">
+        <h2 className="text-2xl font-medium text-content-2">
           {t(I18nKey.ONBOARDING$ACP_SECRETS_TITLE)}
         </h2>
         <p className="text-sm text-[var(--oh-muted)]">
@@ -195,7 +195,7 @@ export function SetupAcpSecretsStep({
       {blockNext ? (
         <p
           data-testid="onboarding-acp-secrets-blocked"
-          className="text-sm text-amber-300"
+          className="text-sm text-amber-700"
         >
           {t(I18nKey.ONBOARDING$ACP_SECRETS_REQUIRED_BLOCKED)}
         </p>

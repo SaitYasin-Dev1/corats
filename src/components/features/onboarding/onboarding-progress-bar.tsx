@@ -39,7 +39,7 @@ export function OnboardingProgressBar({
             }
             className={cn(
               "h-1.5 flex-1 rounded-full transition-colors duration-300",
-              isCompleted || isCurrent ? "bg-white" : "bg-white/15",
+              isCompleted || isCurrent ? "bg-[#3D3929]" : "bg-[#3D3929]/15",
             )}
           />
         );

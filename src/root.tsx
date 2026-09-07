@@ -116,9 +116,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 function AgentServerBootstrapLoading() {
   return (
-    <main className="min-h-screen bg-base px-6 py-10 text-white">
+    <main className="min-h-screen bg-base px-6 py-10 text-content">
       <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center">
-        <div className="rounded-3xl border border-white/10 bg-base/80 px-8 py-10 shadow-2xl">
+        <div className="rounded-3xl border border-[#3D3929]/10 bg-base/80 px-8 py-10 shadow-2xl">
           <LoadingSpinner size="large" />
         </div>
       </div>

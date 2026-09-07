@@ -88,8 +88,8 @@ export function FileQuickRow({
                   index === 0 && "border-l border-l-[var(--oh-border)]",
                   "border-b-2 -mb-px transition-colors",
                   isSelected
-                    ? "border-b-white text-white"
-                    : "border-b-transparent text-[var(--oh-muted)] hover:text-white hover:border-b-white/25",
+                    ? "border-b-[#3D3929] text-content"
+                    : "border-b-transparent text-[var(--oh-muted)] hover:text-content hover:border-b-[#3D3929]/25",
                 )}
               >
                 <button
@@ -110,7 +110,7 @@ export function FileQuickRow({
                   title={t(I18nKey.FILES$CLOSE_TAB, { path })}
                   className={cn(
                     "inline-flex items-center justify-center size-5 self-center mr-1 rounded-sm shrink-0 cursor-pointer",
-                    "text-inherit hover:bg-white/10",
+                    "text-inherit hover:bg-[#3D3929]/10",
                     // Always visible on small / touch-first viewports; hover to
                     // reveal on fine pointers (desktop).
                     "opacity-100 transition-opacity",

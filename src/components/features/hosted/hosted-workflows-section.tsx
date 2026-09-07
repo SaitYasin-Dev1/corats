@@ -34,10 +34,10 @@ type Workflow = {
 };
 
 const RUN_STATUS_CLASS: Record<string, string> = {
-  SUCCEEDED: "text-emerald-400",
-  FAILED: "text-red-400",
-  RUNNING: "text-sky-400",
-  PAUSED: "text-amber-300",
+  SUCCEEDED: "text-emerald-700",
+  FAILED: "text-red-700",
+  RUNNING: "text-sky-700",
+  PAUSED: "text-amber-700",
 };
 
 function formatRunTime(run: WorkflowRun): string {
@@ -143,7 +143,7 @@ export function HostedWorkflowsSection() {
             onClick={() => void load()}
             aria-label={t(I18nKey.WORKFLOWS$REFRESH)}
             title={t(I18nKey.WORKFLOWS$REFRESH)}
-            className="flex size-8 items-center justify-center rounded-md text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-white"
+            className="flex size-8 items-center justify-center rounded-md text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-content"
           >
             <RefreshCw className="size-4" aria-hidden />
           </button>
@@ -173,7 +173,7 @@ export function HostedWorkflowsSection() {
             onChange={(e) => setNewName(e.target.value)}
             placeholder={t(I18nKey.WORKFLOWS$NAME_PLACEHOLDER)}
             maxLength={120}
-            className="h-9 min-w-0 flex-1 rounded-md border border-[var(--oh-border)] bg-base px-3 text-sm text-content placeholder:text-[var(--oh-muted)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#8055f6]"
+            className="h-9 min-w-0 flex-1 rounded-md border border-[var(--oh-border)] bg-base px-3 text-sm text-content placeholder:text-[var(--oh-muted)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#C6613F]"
           />
           <button
             type="submit"
@@ -181,7 +181,7 @@ export function HostedWorkflowsSection() {
             disabled={creating || !newName.trim()}
             className={cn(
               "h-9 rounded-md px-3 text-sm font-semibold text-white",
-              "bg-gradient-to-r from-[#8055f6] via-[#4e7df7] to-[#2ccff0]",
+              "bg-[#C6613F] hover:bg-[#A94E2F]",
               (creating || !newName.trim()) && "opacity-60",
             )}
           >
@@ -191,7 +191,7 @@ export function HostedWorkflowsSection() {
       ) : null}
 
       {error ? (
-        <p className="mt-3 text-sm text-red-400">
+        <p className="mt-3 text-sm text-red-700">
           {t(I18nKey.WORKFLOWS$ERROR)}
         </p>
       ) : null}
@@ -234,7 +234,7 @@ export function HostedWorkflowsSection() {
                 className={cn(
                   "shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
                   wf.status === "ENABLED"
-                    ? "border-emerald-500/40 text-emerald-400"
+                    ? "border-emerald-500/40 text-emerald-700"
                     : "border-[var(--oh-border)] text-muted",
                 )}
               >
@@ -257,7 +257,7 @@ export function HostedWorkflowsSection() {
                 }
                 className={cn(
                   "flex size-8 shrink-0 items-center justify-center rounded-md",
-                  "text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-white",
+                  "text-[var(--oh-muted)] hover:bg-[var(--oh-surface-raised)] hover:text-content",
                   busyId === wf.id && "opacity-50",
                   wf.manuallyTriggerable === false &&
                     "cursor-not-allowed opacity-35 hover:bg-transparent hover:text-[var(--oh-muted)]",

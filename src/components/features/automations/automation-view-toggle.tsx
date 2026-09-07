@@ -143,7 +143,7 @@ export function AutomationViewToggle({
           setOpen((current) => !current);
         }}
         className={cn(
-          "inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[var(--oh-border)] bg-base-secondary text-white transition-colors hover:bg-[var(--oh-interactive-hover)] focus-visible:border-white/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/20",
+          "inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[var(--oh-border)] bg-base-secondary text-content transition-colors hover:bg-[var(--oh-interactive-hover)] focus-visible:border-[#3D3929]/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#3D3929]/20",
           "disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-base-secondary",
         )}
       >

@@ -107,7 +107,7 @@ export function AgentCanvasVersionModal({
         <header className="flex items-center gap-3 pr-8">
           {updateAvailable ? (
             <ArrowUpCircle
-              className="size-7 shrink-0 text-[#3B82F6]"
+              className="size-7 shrink-0 text-[#2B5D9B]"
               aria-hidden
             />
           ) : (
@@ -116,7 +116,7 @@ export function AgentCanvasVersionModal({
               aria-hidden
             />
           )}
-          <h2 className="text-base font-semibold leading-6 text-white">
+          <h2 className="text-base font-semibold leading-6 text-content">
             {t(
               updateAvailable
                 ? I18nKey.SETTINGS$VERSION_UPDATE_AVAILABLE
@@ -124,7 +124,7 @@ export function AgentCanvasVersionModal({
             )}
           </h2>
           {updateAvailable && latestVersion ? (
-            <span className="rounded-full bg-[#1E3A5F] px-2 py-0.5 text-xs font-semibold text-[#3B82F6]">
+            <span className="rounded-full bg-[#3B82F6]/10 px-2 py-0.5 text-xs font-semibold text-[#2B5D9B]">
               {latestVersion}
             </span>
           ) : null}
@@ -141,7 +141,7 @@ export function AgentCanvasVersionModal({
                 href={AGENT_CANVAS_RELEASE_NOTES_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-white hover:text-[var(--oh-text)]"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap font-medium text-content hover:text-[var(--oh-text)]"
               >
                 {t(I18nKey.SETTINGS$VERSION_RELEASE_NOTES)}
                 <ExternalLink className="size-4 shrink-0" aria-hidden />
@@ -161,7 +161,7 @@ export function AgentCanvasVersionModal({
                     href={AGENT_CANVAS_RELEASE_NOTES_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-medium text-white hover:text-[var(--oh-text)]"
+                    className="inline-flex items-center gap-1.5 font-medium text-content hover:text-[var(--oh-text)]"
                   >
                     {t(I18nKey.SETTINGS$VERSION_RELEASE_NOTES)}
                     <ExternalLink className="size-4 shrink-0" aria-hidden />
@@ -187,8 +187,8 @@ export function AgentCanvasVersionModal({
                   className={cn(
                     "inline-flex items-center gap-1.5 px-3 pb-2 text-sm font-medium",
                     selectedTab === tab
-                      ? "border-b border-white text-white"
-                      : "text-[var(--oh-muted)] hover:text-white",
+                      ? "border-b border-content text-content"
+                      : "text-[var(--oh-muted)] hover:text-content",
                   )}
                 >
                   <UpdateCommandTabIcon tab={tab} />
@@ -197,7 +197,7 @@ export function AgentCanvasVersionModal({
               ))}
             </div>
             <div className="flex items-center gap-3 rounded-lg border border-[var(--oh-border)] bg-[var(--oh-surface-deep)] px-4 py-3">
-              <code className="min-w-0 flex-1 overflow-visible whitespace-nowrap font-mono text-sm text-white">
+              <code className="min-w-0 flex-1 overflow-visible whitespace-nowrap font-mono text-sm text-content">
                 {command}
               </code>
               <button
@@ -209,7 +209,7 @@ export function AgentCanvasVersionModal({
                     : I18nKey.SETTINGS$VERSION_COPY_COMMAND,
                 )}
                 disabled={copied}
-                className="shrink-0 text-[var(--oh-muted)] hover:text-white disabled:hover:text-[var(--oh-muted)]"
+                className="shrink-0 text-[var(--oh-muted)] hover:text-content disabled:hover:text-[var(--oh-muted)]"
               >
                 {copied ? (
                   <Check
@@ -229,7 +229,7 @@ export function AgentCanvasVersionModal({
             <button
               type="button"
               onClick={onCheckForUpdates}
-              className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-[var(--oh-text)] disabled:cursor-wait disabled:text-[var(--oh-muted)]"
+              className="inline-flex items-center gap-2 text-sm font-medium text-content hover:text-[var(--oh-text)] disabled:cursor-wait disabled:text-[var(--oh-muted)]"
               disabled={isChecking}
             >
               {t(I18nKey.SETTINGS$VERSION_CHECK_FOR_UPDATES)}

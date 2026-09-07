@@ -161,7 +161,7 @@ export function SidebarRailBody({
             className={cn(
               "hidden md:inline-flex ml-auto",
               SIDEBAR_ICON_BUTTON_CLASS,
-              "text-[var(--oh-muted)] hover:text-white hover:bg-[var(--oh-surface-raised)]",
+              "text-[var(--oh-muted)] hover:text-content hover:bg-[var(--oh-surface-raised)]",
             )}
           >
             <ChevronLeft width={14} height={14} />
@@ -176,7 +176,7 @@ export function SidebarRailBody({
             className={cn(
               "inline-flex ml-auto",
               SIDEBAR_ICON_BUTTON_CLASS,
-              "text-[var(--oh-muted)] hover:text-white hover:bg-[var(--oh-surface-raised)]",
+              "text-[var(--oh-muted)] hover:text-content hover:bg-[var(--oh-surface-raised)]",
             )}
           >
             <ChevronLeft width={14} height={14} />

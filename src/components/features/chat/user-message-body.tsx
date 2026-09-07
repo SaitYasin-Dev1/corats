@@ -4,6 +4,7 @@ import { cn } from "#/utils/utils";
 import { I18nKey } from "#/i18n/declaration";
 import { MarkdownRenderer } from "../markdown/markdown-renderer";
 import { ChatAnchor, ChatCode, ChatStrong } from "./chat-markdown-path-code";
+import { ChatImage, ChatSource, ChatVideo } from "./chat-media";
 
 const USER_MESSAGE_MAX_LINES = 5;
 const USER_MESSAGE_LENGTH_THRESHOLD = 360;
@@ -16,6 +17,11 @@ export const chatBubbleMarkdownComponents = {
   code: ChatCode,
   a: ChatAnchor,
   strong: ChatStrong,
+  // Workspace-relative media embeds (see chat-media.tsx / the
+  // corat-media-generation skill).
+  img: ChatImage,
+  video: ChatVideo,
+  source: ChatSource,
 };
 
 export function UserMessageBody({

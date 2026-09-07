@@ -112,7 +112,7 @@ export function RunLogsModal({
 
   const tabBaseClass =
     "border-b-2 px-3 py-2 text-sm font-normal transition-colors focus:outline-none";
-  const tabActiveClass = "border-[var(--oh-primary)] text-white";
+  const tabActiveClass = "border-[var(--oh-primary)] text-content";
   const tabInactiveClass = "border-transparent text-muted hover:text-content";
 
   return (
@@ -183,7 +183,7 @@ export function RunLogsModal({
           role="tabpanel"
           id={`run-logs-panel-${activeTab}`}
           aria-labelledby={`run-logs-tab-${activeTab}`}
-          className="mt-3 min-h-[12rem] flex-1 overflow-auto rounded-lg border border-[var(--oh-border)] bg-black/40 p-4 font-mono text-xs"
+          className="mt-3 min-h-[12rem] flex-1 overflow-auto rounded-lg border border-[var(--oh-border)] bg-[#EBE8DC] p-4 font-mono text-xs"
         >
           {noBashCommand && (
             <p className="text-muted italic">

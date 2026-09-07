@@ -65,10 +65,29 @@ export const MARKDOWN_SANITIZE_SCHEMA: Schema = {
       "height",
       "loading",
     ],
+    // `<video>` / `<source>` let agent messages embed generated media from
+    // the conversation workspace. The `src` protocol allowlist below
+    // (http/https + relative paths) applies to these too, and neither
+    // element executes script, so the attack surface matches `<img>`.
+    video: [
+      "src",
+      "poster",
+      "controls",
+      "width",
+      "height",
+      "loop",
+      "muted",
+      // hast-util-sanitize matches on hast property names (camelCase).
+      "playsInline",
+      "preload",
+    ],
+    source: ["src", "type"],
   },
   tagNames: [
     ...(defaultSchema.tagNames ?? []),
     "img",
+    "video",
+    "source",
     "details",
     "summary",
     "figure",
@@ -81,6 +100,7 @@ export const MARKDOWN_SANITIZE_SCHEMA: Schema = {
   protocols: {
     ...defaultSchema.protocols,
     src: ["http", "https"],
+    poster: ["http", "https"],
     href: ["http", "https", "mailto", "tel"],
   },
 };

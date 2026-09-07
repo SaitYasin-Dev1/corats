@@ -201,7 +201,7 @@ function FieldLabelText({ field }: { field: SetupFormFieldDefinition }) {
     <span className="flex items-center gap-2 text-sm">
       {field.label}
       {field.required && (
-        <span className="text-sm leading-none text-red-400" aria-hidden>
+        <span className="text-sm leading-none text-red-700" aria-hidden>
           *
         </span>
       )}
@@ -223,7 +223,7 @@ function FieldError({ testId, error }: { testId: string; error?: string }) {
     <p
       role="alert"
       data-testid={`${testId}-error`}
-      className="-mt-1 text-xs text-red-400"
+      className="-mt-1 text-xs text-red-700"
     >
       {error}
     </p>
