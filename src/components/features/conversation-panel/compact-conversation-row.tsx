@@ -67,7 +67,10 @@ export function CompactConversationRow({
           sandboxStatus={sandboxStatus}
           showTooltip={false}
         />
-        <span className="text-sm font-medium text-content truncate" title={title}>
+        <span
+          className="text-sm font-medium text-content truncate"
+          title={title}
+        >
           {title || t(I18nKey.CONVERSATION$UNTITLED)}
         </span>
       </div>

@@ -163,7 +163,8 @@ export function ConversationOverviewToggle({
               // keeping the smaller Info glyph.
               mobileTopBarIconButtonClassName,
               "size-7",
-              isOverviewVisible && "bg-[#3D3929]/10 text-[var(--oh-foreground)]",
+              isOverviewVisible &&
+                "bg-[#3D3929]/10 text-[var(--oh-foreground)]",
               isArchivedConversation &&
                 "cursor-not-allowed opacity-50 hover:bg-transparent hover:text-[var(--oh-muted)]",
               className,

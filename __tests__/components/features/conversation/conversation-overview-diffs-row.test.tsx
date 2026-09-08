@@ -130,11 +130,11 @@ describe("ConversationOverviewDiffsRow", () => {
       "conversation-overview-diffs-git-action",
     );
 
-    expect(row).toHaveClass("hover:bg-white/5");
+    expect(row).toHaveClass("hover:bg-[#3D3929]/5");
     expect(row?.className).toContain(
       "has-[.conversation-overview-diffs-git-action:hover]:bg-transparent",
     );
-    expect(changesButton).not.toHaveClass("hover:bg-white/5");
-    expect(gitAction).toHaveClass("hover:bg-white/10");
+    expect(changesButton).not.toHaveClass("hover:bg-[#3D3929]/5");
+    expect(gitAction).toHaveClass("hover:bg-[#3D3929]/10");
   });
 });

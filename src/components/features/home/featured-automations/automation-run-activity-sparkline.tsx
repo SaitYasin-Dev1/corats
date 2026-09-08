@@ -35,7 +35,9 @@ function TooltipRow({
   return (
     <div className="flex items-start gap-2 text-xs">
       <span className="w-16 shrink-0 text-[var(--oh-muted)]">{label}</span>
-      <span className="min-w-0 flex-1 break-words text-content">{children}</span>
+      <span className="min-w-0 flex-1 break-words text-content">
+        {children}
+      </span>
     </div>
   );
 }

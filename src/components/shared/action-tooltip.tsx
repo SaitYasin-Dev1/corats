@@ -33,7 +33,9 @@ export function ActionTooltip({ type, onClick }: ActionTooltipProps) {
         aria-label={ariaLabel}
         className={cn(
           "rounded px-2 h-6.5 text-sm font-normal leading-5 cursor-pointer hover:opacity-80",
-          type === "confirm" ? "bg-tertiary text-content" : "bg-white text-content",
+          type === "confirm"
+            ? "bg-tertiary text-content"
+            : "bg-white text-content",
         )}
         onClick={onClick}
       >
