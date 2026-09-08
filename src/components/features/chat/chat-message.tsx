@@ -6,6 +6,8 @@ import type { SourceType } from "#/types/agent-server/core/base/common";
 import { StyledTooltip } from "#/components/shared/buttons/styled-tooltip";
 import { I18nKey } from "#/i18n/declaration";
 import { TextShimmer } from "#/components/shared/text-shimmer";
+import { isHostedMode } from "#/api/agent-server-config";
+import { ClaudeTurn } from "#/components/features/shell/chat/claude-turn";
 import { MarkdownRenderer } from "../markdown/markdown-renderer";
 import { PendingStopIcon } from "./pending-stop-icon";
 import {
@@ -112,6 +114,24 @@ export function ChatMessage({
 
     return () => observer.disconnect();
   }, [message, canStopPendingMessage, useTruncatedUserBody]);
+
+  // Hosted (claude kabuğu): pending/hata dışındaki turlar claude düzeninde.
+  if (
+    isHostedMode() &&
+    pendingStatus == null &&
+    (type === "user" || type === "agent")
+  ) {
+    return (
+      <ClaudeTurn
+        type={type}
+        message={message}
+        actions={actions}
+        isFromPlanningAgent={isFromPlanningAgent}
+      >
+        {children}
+      </ClaudeTurn>
+    );
+  }
 
   const messageContent = useTruncatedUserBody ? (
     <UserMessageBody

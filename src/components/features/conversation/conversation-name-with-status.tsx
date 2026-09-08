@@ -10,6 +10,8 @@ import { useUserProviders } from "#/hooks/use-user-providers";
 import { getStatusColor, cn } from "#/utils/utils";
 import { AgentState } from "#/types/agent-state";
 import DebugStackframeDot from "#/icons/debug-stackframe-dot.svg?react";
+import { isHostedMode } from "#/api/agent-server-config";
+import { ShareButton } from "#/components/features/shell/topbar/share-button";
 import { ServerStatusContextMenu } from "../controls/server-status-context-menu";
 import { ConversationName } from "./conversation-name";
 import { ConversationGitActionsToggle } from "./conversation-git-actions-toggle";
@@ -147,6 +149,7 @@ export function ConversationNameWithStatus() {
         <ConversationName />
       </div>
       <div className="mr-2 flex shrink-0 items-center gap-1">
+        {isHostedMode() ? <ShareButton /> : null}
         <ConversationGitActionsToggle />
         <ConversationOverviewToggle />
         <RightPanelToggle />

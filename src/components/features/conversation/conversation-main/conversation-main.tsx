@@ -1,4 +1,6 @@
 import { cn } from "#/utils/utils";
+import { isHostedMode } from "#/api/agent-server-config";
+import { SHELL } from "#/components/features/shell/shell-tokens";
 import { ChatInterfaceWrapper } from "./chat-interface-wrapper";
 import { ConversationTabContent } from "../conversation-tabs/conversation-tab-content/conversation-tab-content";
 import { ConversationNameWithStatus } from "../conversation-name-with-status";
@@ -23,6 +25,7 @@ function getDesktopTabPanelClass(isRightPanelShown: boolean) {
 export function ConversationMain() {
   const isMobile = useBreakpoint();
   const isSidebarRailHidden = useBreakpoint(SIDEBAR_RAIL_COLLAPSE_MAX_WIDTH);
+  const claude = isHostedMode();
   const { isRightPanelShown } = useConversationStore();
   const overviewDrawer = useConversationOverviewDrawerOptional();
   const isSecondaryDrawerOpen = Boolean(overviewDrawer?.section);
@@ -84,8 +87,10 @@ export function ConversationMain() {
           <div
             data-testid="chat-pane-header"
             className={cn(
-              "flex h-10 min-h-10 shrink-0 items-center",
-              isSidebarRailHidden && "gap-2 pl-2.5",
+              "flex shrink-0 items-center",
+              claude ? "h-12 min-h-12 px-3" : "h-10 min-h-10",
+              isSidebarRailHidden && !claude && "gap-2 pl-2.5",
+              isSidebarRailHidden && claude && "gap-2",
             )}
           >
             {isSidebarRailHidden ? <SidebarMobileMenuToggle /> : null}
@@ -118,10 +123,22 @@ export function ConversationMain() {
             }}
           >
             <div className="flex h-full w-full flex-col">
-              <div className="flex flex-col flex-1 min-h-0 bg-[var(--oh-surface)] border-l border-[var(--oh-border)] overflow-hidden">
+              <div
+                className={cn(
+                  "flex flex-col flex-1 min-h-0 overflow-hidden",
+                  claude
+                    ? SHELL.panelSurface
+                    : "bg-[var(--oh-surface)] border-l border-[var(--oh-border)]",
+                )}
+              >
                 <div
                   data-testid="tabs-pane-header"
-                  className="flex shrink-0 flex-col border-b border-[var(--oh-border)]"
+                  className={cn(
+                    "flex shrink-0 flex-col border-b",
+                    claude
+                      ? "border-[var(--oh-border-subtle)] min-h-12"
+                      : "border-[var(--oh-border)]",
+                  )}
                 >
                   <ConversationTabs isPanelResizing={isDragging} />
                 </div>

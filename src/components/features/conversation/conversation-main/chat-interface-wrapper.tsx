@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { isHostedMode } from "#/api/agent-server-config";
 import { ChatInterface } from "../../chat/chat-interface";
 import { ConversationOverviewPanel } from "../conversation-overview-panel";
 import { useConversationStore } from "#/stores/conversation-store";
@@ -16,6 +17,8 @@ interface ChatInterfaceWrapperProps {
 
 const THREAD_CLASSNAME =
   "w-full min-w-0 max-w-[800px] h-full flex flex-col min-h-0";
+const THREAD_CLASSNAME_CLAUDE =
+  "w-full min-w-0 max-w-[48rem] h-full flex flex-col min-h-0";
 
 export function ChatInterfaceWrapper({
   isRightPanelShown: _isRightPanelShown,
@@ -40,7 +43,11 @@ export function ChatInterfaceWrapper({
       className="flex h-full min-h-0 w-full overflow-hidden"
     >
       <div className="flex min-h-0 min-w-0 flex-1 justify-center overflow-hidden">
-        <div className={THREAD_CLASSNAME}>
+        <div
+          className={
+            isHostedMode() ? THREAD_CLASSNAME_CLAUDE : THREAD_CLASSNAME
+          }
+        >
           <ChatInterface />
         </div>
       </div>
