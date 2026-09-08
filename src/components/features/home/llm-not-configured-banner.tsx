@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaTriangleExclamation } from "react-icons/fa6";
 import { I18nKey } from "#/i18n/declaration";
+import { isHostedMode } from "#/api/agent-server-config";
 import { useNavigation } from "#/context/navigation-context";
 import { useLlmConfigured } from "#/hooks/use-llm-configured";
 import { BrandButton } from "#/components/features/settings/brand-button";
@@ -24,6 +25,9 @@ export function LlmNotConfiguredBanner() {
   if (isLoading || isConfigured) {
     return null;
   }
+
+  // Hosted: LLM kimliği gateway'den otomatik gelir; kullanıcıya LLM kurulumu gösterilmez.
+  if (isHostedMode()) return null;
 
   return (
     <div

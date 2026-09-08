@@ -9,11 +9,11 @@ const contextMenuVariants = cva(
     variants: {
       theme: {
         default:
-          "absolute rounded-md border border-[var(--oh-border-subtle)] bg-tertiary px-1 py-1 shadow-lg",
+          "absolute rounded-xl border border-[var(--oh-border)] bg-white p-1 shadow-[0_8px_24px_rgba(31,29,23,0.10)]",
         naked: "relative",
         /** In document-body portal; coordinates come from inline `style`. */
         popover:
-          "relative rounded-md border border-[var(--oh-border-subtle)] bg-tertiary px-1 py-1 shadow-lg",
+          "relative rounded-xl border border-[var(--oh-border)] bg-white p-1 shadow-[0_8px_24px_rgba(31,29,23,0.10)]",
       },
       size: {
         compact: "py-1 px-1",

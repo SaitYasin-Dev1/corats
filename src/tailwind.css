@@ -47,7 +47,7 @@
   --color-interactive-active: var(--oh-interactive-active);
 
   /* Cool Grey scale */
-  --color-cool-grey-50:  var(--cool-grey-50);
+  --color-cool-grey-50: var(--cool-grey-50);
   --color-cool-grey-100: var(--cool-grey-100);
   --color-cool-grey-200: var(--cool-grey-200);
   --color-cool-grey-300: var(--cool-grey-300);
@@ -79,22 +79,30 @@
   --oh-foreground: var(--cool-grey-100);
   --oh-surface: var(--cool-grey-925);
   --oh-surface-foreground: var(--cool-grey-100);
-  --oh-surface-raised: var(--cool-grey-900);  /* elevated within a panel */
-  --oh-surface-deep: var(--cool-grey-975);    /* deep inset, context menus */
+  --oh-surface-raised: var(--cool-grey-900); /* elevated within a panel */
+  --oh-surface-deep: var(--cool-grey-975); /* deep inset, context menus */
   --oh-overlay: #ffffff;
   --oh-overlay-foreground: var(--cool-grey-100);
   --oh-modal-title-foreground: var(--cool-grey-50);
   --oh-muted: var(--cool-grey-400);
-  --oh-text-secondary: var(--cool-grey-300);  /* readable secondary text */
-  --oh-text-tertiary: var(--cool-grey-200);   /* tertiary, slightly dimmer */
-  --oh-text-dim: var(--cool-grey-500);        /* placeholders, very muted */
-  --oh-text-subtle: var(--cool-grey-600);     /* subtle labels, breadcrumbs */
-  --oh-interactive-hover: var(--cool-grey-700);      /* hover on mid surfaces (800 bg) */
-  --oh-interactive-hover-low: var(--cool-grey-900);  /* hover on dark base (950 bg) */
-  --oh-interactive-active: var(--cool-grey-800);     /* selected/active on dark base */
-  --oh-interactive-selected: var(--cool-grey-600);   /* selected within a panel (on 800/925 bg) */
-  --oh-scrollbar: color-mix(in srgb, var(--cool-grey-400) 30%, transparent);
-  --oh-scrollbar-hover: color-mix(in srgb, var(--cool-grey-400) 50%, transparent);
+  --oh-text-secondary: var(--cool-grey-300); /* readable secondary text */
+  --oh-text-tertiary: var(--cool-grey-200); /* tertiary, slightly dimmer */
+  --oh-text-dim: var(--cool-grey-500); /* placeholders, very muted */
+  --oh-text-subtle: var(--cool-grey-600); /* subtle labels, breadcrumbs */
+  --oh-interactive-hover: var(
+    --cool-grey-700
+  ); /* hover on mid surfaces (800 bg) */
+  --oh-interactive-hover-low: var(
+    --cool-grey-900
+  ); /* hover on dark base (950 bg) */
+  --oh-interactive-active: var(
+    --cool-grey-800
+  ); /* selected/active on dark base */
+  --oh-interactive-selected: var(
+    --cool-grey-600
+  ); /* selected within a panel (on 800/925 bg) */
+  --oh-scrollbar: var(--cool-grey-700);
+  --oh-scrollbar-hover: var(--cool-grey-600);
   --oh-default: var(--cool-grey-800);
   --oh-default-foreground: var(--cool-grey-100);
   --oh-accent: #c6613f;
@@ -110,17 +118,22 @@
   --oh-border-width: 1px;
   --oh-field-border-width: 1px;
   --oh-border: var(--cool-grey-700);
-  --oh-border-input: var(--cool-grey-700);   /* unified with --oh-border; same stroke weight everywhere */
-  --oh-border-subtle: var(--cool-grey-800);  /* within-panel separators, list dividers */
+  --oh-border-input: var(
+    --cool-grey-700
+  ); /* unified with --oh-border; same stroke weight everywhere */
+  --oh-border-subtle: var(
+    --cool-grey-800
+  ); /* within-panel separators, list dividers */
   --oh-separator: rgba(61, 57, 41, 0.16);
   --oh-focus: #c6613f;
-  --oh-status-success: #1E8A4A;
-  --oh-status-error: #C0392B;
+  --oh-status-success: #1e8a4a;
+  --oh-status-error: #c0392b;
   --oh-link: var(--cool-grey-100);
   --oh-radius: 8px;
   --oh-field-radius: 8px;
   --oh-surface-shadow: none;
-  --oh-overlay-shadow: 0 10px 30px -8px rgba(61, 57, 41, 0.18), 0 2px 8px rgba(61, 57, 41, 0.08);
+  --oh-overlay-shadow:
+    0 10px 30px -8px rgba(61, 57, 41, 0.18), 0 2px 8px rgba(61, 57, 41, 0.08);
   --oh-field-shadow: none;
   --background: var(--oh-background);
   --foreground: var(--oh-foreground);
@@ -250,42 +263,23 @@ button.extension-module-card-interactive {
 }
 
 /* Custom Chat Input */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--oh-scrollbar) transparent;
+}
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-
-/* Hide scrollbar by default */
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0;
-}
-
-/* Show scrollbar on hover */
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background: var(--oh-scrollbar);
-  opacity: 1;
+  border-radius: 9999px;
 }
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--oh-scrollbar-hover);
-}
-
-/* Firefox scrollbar styling */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-  transition: scrollbar-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.custom-scrollbar:hover {
-  scrollbar-color: var(--oh-scrollbar) transparent;
 }
 
 /* Always visible scrollbar for chat interface */
@@ -300,7 +294,7 @@ button.extension-module-card-interactive {
 
 .custom-scrollbar-always::-webkit-scrollbar-thumb {
   background: var(--oh-scrollbar);
-  border-radius: 3px;
+  border-radius: 9999px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -585,7 +579,11 @@ button.extension-module-card-interactive {
 }
 
 .git-external-link-icon {
-  background: linear-gradient(90deg, rgba(69, 69, 69, 0) 0.35%, var(--cool-grey-800) 41.39%);
+  background: linear-gradient(
+    90deg,
+    rgba(69, 69, 69, 0) 0.35%,
+    var(--cool-grey-800) 41.39%
+  );
 }
 
 .api-configuration-modal {
