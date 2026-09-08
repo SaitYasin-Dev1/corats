@@ -9,9 +9,13 @@ import { useTranslation } from "react-i18next";
 import { I18nKey } from "#/i18n/declaration";
 import i18n from "#/i18n";
 import { useConfig } from "#/hooks/query/use-config";
+import { isHostedMode } from "#/api/agent-server-config";
 import { Sidebar } from "#/components/features/sidebar/sidebar";
 import { SidebarMobileNavProvider } from "#/components/features/sidebar/sidebar-mobile-nav-context";
 import { SidebarMobileMenuBar } from "#/components/features/sidebar/sidebar-mobile-menu-bar";
+import { ClaudeSidebar } from "#/components/features/shell/sidebar/claude-sidebar";
+import { ShellMobileTopBar } from "#/components/features/shell/shell-mobile-topbar";
+import { cn } from "#/utils/utils";
 import { useSettings } from "#/hooks/query/use-settings";
 import { useEnsureActiveProfile } from "#/hooks/use-ensure-active-profile";
 import { useMigrateEnabledSkills } from "#/hooks/use-migrate-enabled-skills";
@@ -107,19 +111,33 @@ export default function MainApp() {
     location.pathname,
   );
   const showOnboardingPreview = isOnboardingPreviewActive(location.search);
+  // Hosted (Corat SaaS): claude.ai kabuğu. Local: Agent Canvas kabuğu aynen.
+  const hosted = isHostedMode();
 
   return (
     <ReactRouterNavigationProvider>
       <SidebarMobileNavProvider>
         <div
           data-testid="root-layout"
+          data-shell={hosted ? "claude" : "canvas"}
           className="h-screen lg:min-w-5xl flex flex-col md:flex-row bg-base overflow-hidden p-0"
         >
           <title>{appTitle}</title>
-          <Sidebar />
+          {hosted ? <ClaudeSidebar /> : <Sidebar />}
 
-          <div className="flex min-h-0 flex-col w-full min-w-0 h-full gap-3">
-            {!hideMobileSidebarMenuBar ? <SidebarMobileMenuBar /> : null}
+          <div
+            className={cn(
+              "flex min-h-0 flex-col w-full min-w-0 h-full",
+              hosted ? "gap-0" : "gap-3",
+            )}
+          >
+            {!hideMobileSidebarMenuBar ? (
+              hosted ? (
+                <ShellMobileTopBar />
+              ) : (
+                <SidebarMobileMenuBar />
+              )
+            ) : null}
             {config.data &&
               (config.data.maintenance_start_time ||
                 (config.data.faulty_models &&
