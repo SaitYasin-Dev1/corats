@@ -8,6 +8,7 @@ const mockUpdate = vi.fn();
 const mockDelete = vi.fn();
 let currentConversationId: string | null = null;
 let items: Array<{ id: string; title: string | null; updated_at: string }> = [];
+let isLoading = false;
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -30,8 +31,8 @@ vi.mock("#/context/navigation-context", () => ({
 }));
 vi.mock("#/hooks/query/use-paginated-conversations", () => ({
   usePaginatedConversations: () => ({
-    data: { pages: [{ items, next_page_id: null }] },
-    isLoading: false,
+    data: isLoading ? undefined : { pages: [{ items, next_page_id: null }] },
+    isLoading,
   }),
 }));
 vi.mock("#/hooks/mutation/use-update-conversation", () => ({
@@ -69,6 +70,7 @@ beforeEach(() => {
   mockUpdate.mockReset();
   mockDelete.mockReset();
   currentConversationId = null;
+  isLoading = false;
   items = [
     { id: "c-old", title: "Eski sohbet", updated_at: "2026-09-01T10:00:00Z" },
     { id: "c-new", title: "Yeni sohbet", updated_at: "2026-09-07T10:00:00Z" },
@@ -127,7 +129,17 @@ describe("SidebarRecents", () => {
 
   it("renders nothing when there are no conversations", () => {
     items = [];
+    isLoading = false;
     const { container } = render(<SidebarRecents />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("shows a loading placeholder instead of vanishing during the initial load", () => {
+    items = [];
+    isLoading = true;
+    const { container } = render(<SidebarRecents />);
+    expect(container).not.toBeEmptyDOMElement();
+    expect(screen.getByText("Recents")).toBeInTheDocument();
+    expect(screen.getByTestId("shell-recents-loading")).toBeInTheDocument();
   });
 });

@@ -25,7 +25,7 @@ function sortNewestFirst(list: Recent[]): Recent[] {
 /** claude.ai "Recents": düz liste, hover'da … menüsü (Yeniden adlandır, Sil). */
 export function SidebarRecents({ limit = 20 }: { limit?: number }) {
   const { t } = useTranslation("openhands");
-  const { data } = usePaginatedConversations(limit);
+  const { data, isLoading } = usePaginatedConversations(limit);
   const items = React.useMemo(
     () =>
       sortNewestFirst(data?.pages.flatMap((p) => p.items) ?? []).slice(
@@ -34,16 +34,33 @@ export function SidebarRecents({ limit = 20 }: { limit?: number }) {
       ),
     [data, limit],
   );
-  if (items.length === 0) return null;
+  // Distinguish "still loading" from "genuinely zero conversations": the
+  // former must render a placeholder (the section would otherwise vanish on
+  // mount and pop in once the query resolves), the latter renders nothing.
+  if (!isLoading && items.length === 0) return null;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className={SHELL.sectionLabel}>{t(I18nKey.SHELL$RECENTS)}</div>
-      <ul className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto pr-0.5">
-        {items.map((c) => (
-          <RecentRow key={c.id} conversation={c} />
-        ))}
-      </ul>
+      {isLoading && items.length === 0 ? (
+        <ul
+          data-testid="shell-recents-loading"
+          className="flex flex-col gap-0.5 px-0"
+          aria-hidden
+        >
+          {[0, 1, 2].map((i) => (
+            <li key={i} className={cn(SHELL.navRow, "px-2")}>
+              <span className="h-4 w-full animate-pulse rounded bg-[var(--cool-grey-900)]" />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <ul className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto pr-0.5">
+          {items.map((c) => (
+            <RecentRow key={c.id} conversation={c} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
