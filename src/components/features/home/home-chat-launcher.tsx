@@ -29,10 +29,13 @@ import {
   readStoredLocalWorkspaceMode,
   writeStoredLocalWorkspaceMode,
 } from "#/utils/workspace-mode";
+import { cn } from "#/utils/utils";
 import type { PluginSpec } from "#/api/conversation-service/agent-server-conversation-service.types";
 import { PluginPickerModal } from "#/components/features/plugins/plugin-picker-modal";
 import { PluginPickerTrigger } from "#/components/features/plugins/plugin-picker-trigger";
 import { RecommendedAutomationsLauncher } from "#/components/features/automations/recommended-automations-launcher";
+import { ClaudeGreeting } from "#/components/features/shell/home/claude-greeting";
+import { GuestHint } from "#/components/features/shell/home/guest-hint";
 import { PinnedAutomationsDashboard } from "./featured-automations/pinned-automations-dashboard";
 import { RunningAutomationsList } from "./featured-automations/running-automations-list";
 import { HomeHeaderTitle } from "./home-header/home-header-title";
@@ -41,7 +44,13 @@ import { OpenWorkspaceDialog } from "./open-workspace-dialog";
 import { OpenRepositoryDialog } from "./open-repository-dialog";
 import { HomeGitControlBarPreview } from "./home-git-control-bar-preview";
 
-export function HomeChatLauncher() {
+export function HomeChatLauncher({
+  variant = "default",
+}: {
+  /** "claude": hosted kabuk — serif selamlama, misafir ipucu, otomasyon rayları ve workspace seçici gizli. */
+  variant?: "default" | "claude";
+} = {}) {
+  const isClaude = variant === "claude";
   const { t } = useTranslation("openhands");
   const { backend } = useActiveBackend();
   const { navigate } = useNavigation();
@@ -230,12 +239,21 @@ export function HomeChatLauncher() {
   return (
     <div
       data-testid="home-chat-launcher"
-      className="flex w-full flex-col items-center pt-[max(4rem,28vh)] pb-10"
+      className={cn(
+        "flex w-full flex-col items-center pb-10",
+        isClaude ? "pt-[max(5rem,30vh)]" : "pt-[max(4rem,28vh)]",
+      )}
     >
-      <div className="flex w-full max-w-[800px] flex-col gap-4 md:px-4">
+      <div
+        className={cn(
+          "flex w-full flex-col gap-4 md:px-4",
+          isClaude ? "max-w-[48rem]" : "max-w-[800px]",
+        )}
+      >
         <div className="flex w-full justify-center">
-          <HomeHeaderTitle />
+          {isClaude ? <ClaudeGreeting /> : <HomeHeaderTitle />}
         </div>
+        {isClaude ? <GuestHint /> : null}
 
         <div className="w-full">
           <CustomChatInput
@@ -245,38 +263,42 @@ export function HomeChatLauncher() {
           />
         </div>
 
-        <div className="flex items-center justify-start gap-2">
-          {hasSelection ? (
-            <HomeGitControlBarPreview
-              workspace={pendingWorkspace}
-              repository={pendingRepository}
-              branch={pendingBranch}
-              provider={pendingProvider}
-              workspaceMode={workspaceMode}
-              backendKind={backend.kind}
-              onRepoClick={() => setIsDialogOpen(true)}
-              onWorkspaceModeChange={setWorkspaceMode}
+        {!isClaude ? (
+          <div className="flex items-center justify-start gap-2">
+            {hasSelection ? (
+              <HomeGitControlBarPreview
+                workspace={pendingWorkspace}
+                repository={pendingRepository}
+                branch={pendingBranch}
+                provider={pendingProvider}
+                workspaceMode={workspaceMode}
+                backendKind={backend.kind}
+                onRepoClick={() => setIsDialogOpen(true)}
+                onWorkspaceModeChange={setWorkspaceMode}
+              />
+            ) : (
+              <OpenLauncherButton
+                kind={isLocal ? "local" : "cloud"}
+                onClick={() => setIsDialogOpen(true)}
+                disabled={isCreating || Boolean(workspacesUnsupportedMessage)}
+                disabledTooltip={workspacesUnsupportedMessage}
+              />
+            )}
+            <PluginPickerTrigger
+              count={selectedPlugins.length}
+              onClick={() => setIsPluginPickerOpen(true)}
+              disabled={isCreating}
             />
-          ) : (
-            <OpenLauncherButton
-              kind={isLocal ? "local" : "cloud"}
-              onClick={() => setIsDialogOpen(true)}
-              disabled={isCreating || Boolean(workspacesUnsupportedMessage)}
-              disabledTooltip={workspacesUnsupportedMessage}
-            />
-          )}
-          <PluginPickerTrigger
-            count={selectedPlugins.length}
-            onClick={() => setIsPluginPickerOpen(true)}
-            disabled={isCreating}
-          />
-        </div>
+          </div>
+        ) : null}
 
-        <div className="mt-8 flex w-full flex-col gap-8">
-          <RecommendedAutomationsLauncher variant="rail" />
-          <PinnedAutomationsDashboard />
-          <RunningAutomationsList />
-        </div>
+        {!isClaude ? (
+          <div className="mt-8 flex w-full flex-col gap-8">
+            <RecommendedAutomationsLauncher variant="rail" />
+            <PinnedAutomationsDashboard />
+            <RunningAutomationsList />
+          </div>
+        ) : null}
       </div>
 
       {isLocal ? (
