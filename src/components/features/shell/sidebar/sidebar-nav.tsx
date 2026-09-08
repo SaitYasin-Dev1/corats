@@ -50,6 +50,7 @@ function NavRow({
       end={end}
       data-testid={testId}
       aria-label={collapsed ? label : undefined}
+      aria-current={active ? "page" : undefined}
       className={cn(
         SHELL.navRow,
         collapsed && "justify-center px-0",

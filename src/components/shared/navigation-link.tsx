@@ -61,6 +61,7 @@ export const NavigationLink = React.forwardRef<
       children,
       target,
       rel,
+      "aria-current": ariaCurrentOverride,
       ...props
     },
     ref,
@@ -96,7 +97,10 @@ export const NavigationLink = React.forwardRef<
         rel={rel}
         onClick={handleClick}
         className={resolvedClassName}
-        aria-current={isActive ? "page" : undefined}
+        // A caller-supplied `aria-current` wins: some callers (e.g. sidebar
+        // nav rows with extra "also active" sub-routes) compute a broader
+        // active state than this component's own `to`/`end` check can see.
+        aria-current={ariaCurrentOverride ?? (isActive ? "page" : undefined)}
       >
         {children}
       </a>

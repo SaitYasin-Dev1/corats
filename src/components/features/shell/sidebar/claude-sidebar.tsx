@@ -24,11 +24,6 @@ export function ClaudeSidebar() {
   const [peek, setPeek] = React.useState(false);
   const peekTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  React.useEffect(() => {
-    closeMobile();
-    setPeek(false);
-  }, [currentPath, closeMobile]);
-
   const clearPeekTimer = () => {
     if (peekTimer.current) clearTimeout(peekTimer.current);
     peekTimer.current = null;
@@ -37,6 +32,16 @@ export function ClaudeSidebar() {
     clearPeekTimer();
     peekTimer.current = setTimeout(() => setPeek(next), PEEK_DELAY_MS);
   };
+
+  React.useEffect(() => {
+    closeMobile();
+    // Also cancel any in-flight peek timer: without this, a rail nav click
+    // that fires just before the 150ms peek delay elapses would still open
+    // peek over the page just navigated to (the stale timeout is unaffected
+    // by this effect's own setPeek(false) below).
+    clearPeekTimer();
+    setPeek(false);
+  }, [currentPath, closeMobile]);
 
   return (
     <>

@@ -116,4 +116,34 @@ describe("ClaudeSidebar", () => {
       "aria-current",
     );
   });
+
+  it("marks Customize active via aria-current while on one of its sub-routes", () => {
+    currentPath = "/skills";
+    renderSidebar();
+    expect(screen.getByTestId("shell-nav-customize")).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
+  it("cancels a pending peek timer on route change so it cannot reopen after navigation", () => {
+    vi.useFakeTimers();
+    useSidebarStore.setState({ collapsed: true });
+    const { rerender } = renderSidebar();
+    const aside = screen.getByTestId("shell-sidebar");
+    fireEvent.mouseEnter(aside);
+    // Navigate (e.g. clicking a rail nav icon) before the 150ms peek delay
+    // elapses; the stale timer must not reopen peek after the route change.
+    currentPath = "/customize";
+    rerender(
+      <SidebarMobileNavProvider>
+        <ClaudeSidebar />
+      </SidebarMobileNavProvider>,
+    );
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+    expect(screen.queryByTestId("shell-sidebar-peek")).toBeNull();
+    vi.useRealTimers();
+  });
 });
