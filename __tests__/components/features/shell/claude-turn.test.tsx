@@ -23,6 +23,22 @@ vi.mock("#/components/features/shell/sidebar/use-gateway-me", async () => {
     }),
   };
 });
+vi.mock("#/hooks/query/use-workspace-session", async () => {
+  const actual = await vi.importActual<
+    typeof import("#/hooks/query/use-workspace-session")
+  >("#/hooks/query/use-workspace-session");
+  return {
+    ...actual,
+    useWorkspaceSession: () => ({
+      data: {
+        baseUrl: "http://127.0.0.1:18000/api/conversations/abc/workspace/",
+      },
+      isLoading: false,
+      isError: false,
+      error: null,
+    }),
+  };
+});
 
 import { ChatMessage } from "#/components/features/chat/chat-message";
 
@@ -61,6 +77,16 @@ describe("ChatMessage in hosted (claude) mode", () => {
     expect(bar.className).toContain("opacity-100");
     fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     expect(onAction).toHaveBeenCalled();
+  });
+
+  it("resolves workspace-relative media in an agent turn against the fileserver", () => {
+    render(
+      <ChatMessage type="agent" message="![city](generated_media/img_1.png)" />,
+    );
+    const image = screen.getByTestId("chat-media-image");
+    expect(image.getAttribute("src")).toBe(
+      "http://127.0.0.1:18000/api/conversations/abc/workspace/generated_media/img_1.png",
+    );
   });
 
   it("keeps the legacy bubble for pending user messages", () => {

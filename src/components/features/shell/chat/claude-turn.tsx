@@ -86,9 +86,7 @@ export function ClaudeTurn({
             includeStandard
             includeHeadings
             allowHtml={type !== "user"}
-            components={
-              type === "user" ? chatBubbleMarkdownComponents : undefined
-            }
+            components={chatBubbleMarkdownComponents}
           >
             {message}
           </MarkdownRenderer>
