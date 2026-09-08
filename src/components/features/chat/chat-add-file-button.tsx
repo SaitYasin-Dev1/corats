@@ -2,6 +2,8 @@ import React from "react";
 import { Paperclip, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { I18nKey } from "#/i18n/declaration";
+import { isHostedMode } from "#/api/agent-server-config";
+import { SHELL } from "#/components/features/shell/shell-tokens";
 import { cn } from "#/utils/utils";
 import { chatInputIconButtonClassName } from "#/utils/form-control-classes";
 import { useOptionalConversationId } from "#/hooks/use-conversation-id";
@@ -34,6 +36,7 @@ export function ChatAddFileButton({
   const { conversationId } = useOptionalConversationId();
   const { data: conversation } = useActiveConversation();
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const claude = isHostedMode();
 
   const {
     handleShowAgentTools,
@@ -71,12 +74,18 @@ export function ChatAddFileButton({
       <button
         type="button"
         className={cn(
-          chatInputIconButtonClassName,
-          "relative shrink-0 size-6",
+          claude
+            ? SHELL.addButton
+            : cn(chatInputIconButtonClassName, "relative shrink-0 size-6"),
+          "relative shrink-0",
           disabled
             ? "cursor-not-allowed text-[var(--oh-text-subtle)]"
             : undefined,
-          menuOpen && !disabled && "text-content bg-[#3D3929]/10",
+          menuOpen &&
+            !disabled &&
+            (claude
+              ? "bg-[var(--cool-grey-900)] text-content-2"
+              : "text-content bg-[#3D3929]/10"),
         )}
         aria-label={t(I18nKey.CHAT_INTERFACE$PLUS_MENU)}
         aria-expanded={menuOpen}
@@ -86,7 +95,12 @@ export function ChatAddFileButton({
         disabled={disabled}
       >
         <span className="flex h-full w-full items-center justify-center">
-          <Plus className="h-[13px] w-[13px] shrink-0" strokeWidth={2} />
+          <Plus
+            className={
+              claude ? "h-4 w-4 shrink-0" : "h-[13px] w-[13px] shrink-0"
+            }
+            strokeWidth={2}
+          />
         </span>
       </button>
 

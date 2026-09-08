@@ -5,6 +5,8 @@ import { ChatInputRow } from "./chat-input-row";
 import { ChatInputActions } from "./chat-input-actions";
 import { SlashCommandMenu } from "./slash-command-menu";
 import { useConversationStore } from "#/stores/conversation-store";
+import { isHostedMode } from "#/api/agent-server-config";
+import { SHELL } from "#/components/features/shell/shell-tokens";
 import { cn } from "#/utils/utils";
 import { SlashCommandItem } from "#/hooks/chat/use-slash-command";
 
@@ -62,12 +64,19 @@ export function ChatInputContainer({
   const conversationMode = useConversationStore(
     (state) => state.conversationMode,
   );
+  const claude = isHostedMode();
 
   return (
     <div
       ref={chatContainerRef}
       className={cn(
-        "bg-[var(--oh-surface)] box-border content-stretch flex flex-col items-start justify-center p-4 relative rounded-[15px] w-full",
+        claude
+          ? cn(
+              SHELL.composerCard,
+              SHELL.composerPadding,
+              "box-border flex w-full flex-col items-start justify-center relative",
+            )
+          : "bg-[var(--oh-surface)] box-border content-stretch flex flex-col items-start justify-center p-4 relative rounded-[15px] w-full",
         conversationMode === "plan" && "border border-[#597FF4]",
       )}
       onDragOver={(e) => onDragOver(e, disabled)}
