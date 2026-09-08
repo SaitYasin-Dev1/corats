@@ -13,6 +13,7 @@ import {
 } from "./settings-handlers";
 import { CONVERSATION_HANDLERS } from "./conversation-handlers";
 import { AUTH_HANDLERS } from "./auth-handlers";
+import { GATEWAY_HANDLERS } from "./gateway-handlers";
 import { FEEDBACK_HANDLERS } from "./feedback-handlers";
 import { ANALYTICS_HANDLERS } from "./analytics-handlers";
 import {
@@ -33,6 +34,7 @@ export const handlers = [
   ...SETTINGS_HANDLERS,
   ...CONVERSATION_HANDLERS,
   ...AUTH_HANDLERS,
+  ...GATEWAY_HANDLERS,
   ...FEEDBACK_HANDLERS,
   ...ANALYTICS_HANDLERS,
   ...AUTOMATION_HANDLERS,

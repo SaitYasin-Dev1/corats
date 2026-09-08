@@ -18,6 +18,7 @@
 - Current Cloud behavior is implemented explicitly through the backend registry, Cloud service layer, and device authorization flow.
 - Primary verification commands: `npm run lint`, `npm test`, `npm run build`, and `npm run build:lib`.
 - GitHub automation now includes `.github/workflows/ci.yml` for `npm ci`, `npm test`, and `npm run build`, plus `.github/dependabot.yml` with weekly npm/github-actions updates gated by a 7-day cooldown.
+- **Hosted shell (Corat SaaS):** when `isHostedMode()` is true (`window.__AGENT_CANVAS_HOSTED_MODE__` from `static-server --hosted-mode`, or `VITE_HOSTED_MODE=true`), the app renders the claude.ai-style shell under `src/components/features/shell/` (sidebar, home greeting, composer/turn styling, share button). Identity comes from the gateway's `GET /api/me` (`useGatewayMe`); guests see Log in / Sign up. Measurements live in `shell-tokens.ts` only. Local mode keeps the Agent Canvas shell untouched. Dev: `npx cross-env VITE_HOSTED_MODE=true npm run dev:mock` (+ `VITE_MOCK_GATEWAY_GUEST=true` for the guest view); screenshots: `scripts/shell-screenshots.mjs`.
 
 ## Repository Map — what belongs where
 
