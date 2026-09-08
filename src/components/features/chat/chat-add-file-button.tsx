@@ -75,9 +75,8 @@ export function ChatAddFileButton({
         type="button"
         className={cn(
           claude
-            ? SHELL.addButton
+            ? cn(SHELL.addButton, "relative shrink-0")
             : cn(chatInputIconButtonClassName, "relative shrink-0 size-6"),
-          "relative shrink-0",
           disabled
             ? "cursor-not-allowed text-[var(--oh-text-subtle)]"
             : undefined,
