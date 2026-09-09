@@ -669,15 +669,21 @@ export function ConversationWebSocketProvider({
             appendOutput(textContent);
           }
 
-          // Handle BrowserObservation events - update browser store with screenshot
+          // Handle BrowserObservation events - update browser store with
+          // screenshot. When the tool can't produce one (e.g. a `file://`
+          // navigation, or any other browser error), CLEAR it instead of
+          // leaving it untouched — otherwise the chrome bar's URL (set
+          // unconditionally below) moves on to the new page while the
+          // panel keeps showing a screenshot of the PREVIOUS one, which
+          // reads as "the new page silently failed to load".
           if (isBrowserObservationEvent(event)) {
             const { screenshot_data: screenshotData } = event.observation;
-            if (screenshotData) {
-              const screenshotSrc = screenshotData.startsWith("data:")
+            const screenshotSrc = screenshotData
+              ? screenshotData.startsWith("data:")
                 ? screenshotData
-                : `data:image/png;base64,${screenshotData}`;
-              useBrowserStore.getState().setScreenshotSrc(screenshotSrc);
-            }
+                : `data:image/png;base64,${screenshotData}`
+              : "";
+            useBrowserStore.getState().setScreenshotSrc(screenshotSrc);
           }
 
           // Handle BrowserNavigateAction events - update browser store with URL

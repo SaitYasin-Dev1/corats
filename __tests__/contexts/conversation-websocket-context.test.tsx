@@ -704,6 +704,95 @@ describe("ConversationWebSocketProvider — conversation-scoped event store", ()
     expect(useBrowserStore.getState().url).toBe("");
   });
 
+  // The agent navigates its browser tool to a page the tool can't screenshot
+  // (e.g. a local `file://` page) — a real, reported failure mode: the
+  // BrowserObservation reports `is_error: true` with no `screenshot_data`.
+  const makeBrowserNavigateAction = (url: string) => ({
+    id: "evt-browse-nav-1",
+    timestamp: new Date().toISOString(),
+    source: "agent",
+    thought: [],
+    thinking_blocks: [],
+    tool_name: "browser_navigate",
+    tool_call_id: "call-browse-1",
+    tool_call: {
+      id: "call-browse-1",
+      type: "function",
+      function: { name: "browser_navigate", arguments: "{}" },
+    },
+    llm_response_id: "resp-browse-1",
+    security_risk: "LOW",
+    action: { kind: "BrowserNavigateAction", url },
+  });
+
+  const makeBrowserObservationError = (errorMessage: string) => ({
+    id: "evt-browse-obs-1",
+    timestamp: new Date().toISOString(),
+    source: "environment",
+    action_id: "action-browse-1",
+    tool_name: "browser_navigate",
+    tool_call_id: "call-browse-1",
+    observation: {
+      kind: "BrowserObservation",
+      content: [{ type: "text", text: errorMessage }],
+      is_error: true,
+      screenshot_data: null,
+    },
+  });
+
+  it("clears a stale screenshot when a browser navigation can't be screenshotted", async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ConversationWebSocketProvider
+          conversationId="conv-browser-error"
+          conversationUrl="http://localhost/api"
+        >
+          <div />
+        </ConversationWebSocketProvider>
+      </QueryClientProvider>,
+    );
+    await waitFor(() => expect(wsCapture.mainOnMessage).not.toBeNull());
+
+    // A prior successful navigation left a real screenshot on screen.
+    useBrowserStore.setState({
+      url: "https://example.com",
+      screenshotSrc: "data:image/png;base64,old-page",
+    });
+
+    act(() => {
+      wsCapture.mainOnMessage!({
+        data: JSON.stringify(
+          makeBrowserNavigateAction("file:///workspace/index.html"),
+        ),
+      });
+    });
+
+    // Assert: the address bar already reflects the new (unreachable) URL —
+    // this part always worked.
+    expect(useBrowserStore.getState().url).toBe("file:///workspace/index.html");
+    // But the OLD screenshot is still showing under the NEW url until the
+    // observation arrives.
+    expect(useBrowserStore.getState().screenshotSrc).toBe(
+      "data:image/png;base64,old-page",
+    );
+
+    act(() => {
+      wsCapture.mainOnMessage!({
+        data: JSON.stringify(
+          makeBrowserObservationError("file:// is not supported"),
+        ),
+      });
+    });
+
+    // Assert: the stale screenshot from the PREVIOUS page must not keep
+    // showing under the new url once the tool reports it couldn't capture
+    // one — that mismatch is exactly the reported bug ("local url kaldı,
+    // görüntülemiyor").
+    await waitFor(() =>
+      expect(useBrowserStore.getState().screenshotSrc).toBe(""),
+    );
+  });
+
   it("resets the metrics store when switching conversations", async () => {
     const { rerender } = renderProvider("conv-a");
     await waitFor(() => expect(eventIds()).toEqual(["user-msg-conv-a"]));
