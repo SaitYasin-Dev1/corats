@@ -107,7 +107,7 @@ function RecentRow({ conversation }: { conversation: Recent }) {
           ref={inputRef}
           defaultValue={title}
           aria-label={t(I18nKey.SHELL$RENAME)}
-          className="h-8 w-full rounded-lg bg-white px-2 text-sm text-content-2 outline-none ring-1 ring-[var(--oh-accent)]"
+          className="h-8 w-full rounded-lg bg-[var(--oh-surface-raised)] px-2 text-sm text-content-2 outline-none ring-1 ring-[var(--oh-accent)]"
           onBlur={commitRename}
           onKeyDown={(e) => {
             if (e.key === "Enter") commitRename();
