@@ -33,8 +33,8 @@ export const SHELL = {
   ),
 
   composerCard: cn(
-    "rounded-2xl border border-[var(--oh-border)] bg-white",
-    "shadow-[0_1px_2px_rgba(31,29,23,0.04),0_0_0_1px_rgba(31,29,23,0.02)]",
+    "rounded-2xl border border-[var(--oh-border)] bg-[var(--oh-surface-raised)]",
+    "shadow-[0_1px_2px_rgba(0,0,0,0.16),0_0_0_1px_rgba(0,0,0,0.08)]",
     "focus-within:border-[var(--cool-grey-600)]",
   ),
   composerPadding: "px-4 pt-3.5 pb-3",
@@ -62,8 +62,8 @@ export const SHELL = {
 
   /** Dropdown / popover. */
   menu: cn(
-    "z-50 min-w-[12rem] rounded-xl border border-[var(--oh-border)] bg-white p-1",
-    "shadow-[0_8px_24px_rgba(31,29,23,0.10)]",
+    "z-50 min-w-[12rem] rounded-xl border border-[var(--oh-border)] bg-[var(--oh-surface-deep)] p-1",
+    "shadow-[0_8px_24px_rgba(0,0,0,0.32)]",
   ),
   menuItem: cn(
     "flex h-8 w-full cursor-pointer items-center gap-2 rounded-lg px-2 text-left text-sm",
@@ -78,5 +78,6 @@ export const SHELL = {
   ),
 
   topbar: "flex h-12 min-h-12 shrink-0 items-center gap-2 px-3",
-  panelSurface: "bg-white border-l border-[var(--oh-border-subtle)]",
+  panelSurface:
+    "bg-[var(--oh-surface)] border-l border-[var(--oh-border-subtle)]",
 } as const;
